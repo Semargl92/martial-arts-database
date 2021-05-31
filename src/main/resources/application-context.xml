@@ -11,13 +11,13 @@
 
     <!--    <import resource="datasource.xml"/>-->
 
-    <bean id="user1" class="com.noirix.domain.User">
+    <bean id="user1" class="by.semargl.domain.User">
         <constructor-arg index="0" value="10" type="java.lang.Long"/>
         <constructor-arg index="1" value="SpringUserName"/>
         <constructor-arg index="2" value="SpringUserSurname"/>
     </bean>
 
-    <bean id="user2" class="com.noirix.domain.User">
+    <bean id="user2" class="by.semargl.domain.User">
         <constructor-arg index="0" value="11" type="java.lang.Long"/>
         <constructor-arg index="1" value="SpringUserName2"/>
         <constructor-arg index="2" value="SpringUserSurname2"/>

@@ -4,12 +4,15 @@ import by.semargl.domain.User;
 import by.semargl.repository.UserColumn;
 import by.semargl.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -19,13 +22,20 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
+@Component
 @Primary
-@RequiredArgsConstructor
-public class JdbcUserRepositoryImpl implements UserRepository {
+
+public class JdbcTemplateUserRepository implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    public JdbcTemplateUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     @Override
     public List<User> findAll() {

@@ -9,8 +9,8 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class DatabaseProperties {
 
@@ -25,4 +25,5 @@ public class DatabaseProperties {
 
     @Value("${password}")
     private String password;
+
 }
