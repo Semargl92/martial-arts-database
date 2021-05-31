@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class JdbcTemplateUserRepository implements UserRepository {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
+        entity.setCreated(new Date(System.currentTimeMillis()));
+        entity.setChanged(new Date(System.currentTimeMillis()));
         MapSqlParameterSource params = generateUserParamsMap(entity);
 
         namedParameterJdbcTemplate.update(createQuery, params, keyHolder, new String[]{"id"});
@@ -89,6 +92,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
         final String updateQuery = "update users set name=:name, surname=:surname, login=:login, gender=:gender, " +
                 "weight=:weight, is_deleted=:isDeleted, created=:created, changed=:changed, birth_date=:birthDate where id=:id;";
 
+        entity.setChanged(new Date(System.currentTimeMillis()));
         MapSqlParameterSource params = generateUserParamsMap(entity);
         params.addValue("id", entity.getId());
         namedParameterJdbcTemplate.update(updateQuery, params);
@@ -124,12 +128,14 @@ public class JdbcTemplateUserRepository implements UserRepository {
 
     @Override
     public void batchInsert(List<User> users) {
-        final String createQuery = "insert into users (name, surname, birth_date, login, weight) " +
-                "values (:name, :surname, :birthDate, :login, :weight);";
+        final String createQuery = "insert into users (name, surname, login, gender, weight, is_deleted, created, changed, birth_date) " +
+                "values (:name, :surname, :login, :gender, :weight, :isDeleted, :created, :changed, :birthDate);";
 
         List<MapSqlParameterSource> batchParams = new ArrayList<>();
 
         for (User user : users) {
+            user.setCreated(new Date(System.currentTimeMillis()));
+            user.setChanged(new Date(System.currentTimeMillis()));
             batchParams.add(generateUserParamsMap(user));
         }
 
