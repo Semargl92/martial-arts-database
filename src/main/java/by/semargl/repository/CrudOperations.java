@@ -12,11 +12,7 @@ public interface CrudOperations<K, T> {
 
     T save(T entity);
 
-    void addOne(T entity);
-
-    void save(List<T> entities);
-
     T update(T entity);
 
-    void delete(K id);
+    boolean delete(K id);
 }

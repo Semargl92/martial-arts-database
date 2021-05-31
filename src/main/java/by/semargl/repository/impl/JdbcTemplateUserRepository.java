@@ -1,12 +1,12 @@
 package by.semargl.repository.impl;
 
 import by.semargl.domain.User;
+import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.UserColumn;
 import by.semargl.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -43,14 +43,19 @@ public class JdbcTemplateUserRepository implements UserRepository {
     }
 
     @Override
-    public User findOne(Long id) {
+    public User findOne(Long id) throws NoSuchEntityException {
+        User chosenOne;
+        try {
+            final String findOneWithNameParam = "select * from users where id = :number";
 
-        final String findOneWithNameParam = "select * from users where id = :number";
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("number", id);
 
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("number", id);
-
-        return namedParameterJdbcTemplate.queryForObject(findOneWithNameParam, params, this::getUserRowMapper);
+            chosenOne = namedParameterJdbcTemplate.queryForObject(findOneWithNameParam, params, this::getUserRowMapper);
+        } catch (EmptyResultDataAccessException empty) {
+            throw new NoSuchEntityException("There is no such user");
+        }
+        return chosenOne;
     }
 
     @Override
@@ -70,28 +75,40 @@ public class JdbcTemplateUserRepository implements UserRepository {
     }
 
     @Override
-    public void addOne(User entity) {
-        final String createQuery = "insert into users (name, surname, login, gender, weight, is_deleted, created, changed, birth_date) " +
-                "values (:name, :surname, :login, :gender, :weight, :isDeleted, :created, :changed, :birthDate);";
+    public User update(User entity) throws NoSuchEntityException {
+        if (entity.getId() == null) {
+            throw new NoSuchEntityException("There is no id data for this user");
+        }
+
+        try {
+            findOne(entity.getId());
+        } catch (NoSuchEntityException ex) {
+            throw new NoSuchEntityException("There is no such user to update");
+        }
+
+        final String updateQuery = "update users set name=:name, surname=:surname, login=:login, gender=:gender, " +
+                "weight=:weight, is_deleted=:isDeleted, created=:created, changed=:changed, birth_date=:birthDate where id=:id;";
 
         MapSqlParameterSource params = generateUserParamsMap(entity);
-        namedParameterJdbcTemplate.update(createQuery, params);
+        params.addValue("id", entity.getId());
+        namedParameterJdbcTemplate.update(updateQuery, params);
+        return findOne(entity.getId());
     }
 
     @Override
-    public void save(List<User> entities) {
-        for (User entity : entities) {
-            addOne(entity);
+    public boolean delete(Long id) throws NoSuchEntityException {
+        try {
+            findOne(id);
+        } catch (NoSuchEntityException ex) {
+            throw new NoSuchEntityException("There is no such user to delete");
         }
-    }
 
-    @Override
-    public User update(User entity) {
-        return null;
-    }
+        final String deleteQuery = "delete from users where id =:id;";
 
-    @Override
-    public void delete(Long id) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        namedParameterJdbcTemplate.update(deleteQuery, params);
+        return true;
     }
 
     @Override
