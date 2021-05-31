@@ -3,10 +3,10 @@ package by.semargl.controller;
 import by.semargl.controller.command.Commands;
 import by.semargl.domain.User;
 import by.semargl.repository.UserRepository;
-import by.semargl.repository.impl.UserRepositoryImpl;
 import com.google.gson.Gson;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,7 +21,8 @@ import java.util.Collections;
 //@RestController
 public class FrontController extends HttpServlet {
 
-    public UserRepository userRepository = new UserRepositoryImpl();
+    @Autowired
+    public UserRepository userRepository;
 
     public FrontController() {
         super();
