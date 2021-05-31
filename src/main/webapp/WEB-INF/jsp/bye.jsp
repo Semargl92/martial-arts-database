@@ -5,7 +5,7 @@
     <title>Bye Page!</title>
 </head>
 <body>
-<div>Students Demo - Bye Page</div>
+<div>Martial Arts - Bye Page</div>
 </body>
 
 <div>
@@ -17,9 +17,13 @@
             <td>User Id</td>
             <td>User Name</td>
             <td>User Surname</td>
-            <td>Birth date</td>
             <td>Login</td>
+            <td>Gender</td>
             <td>Weight</td>
+            <td>Is Deleted</td>
+            <td>Created</td>
+            <td>Changed</td>
+            <td>Birth date</td>
             <td>Edit</td>
             <td>Delete</td>
         </tr>
@@ -29,9 +33,13 @@
                 <td>${user.id}</td>
                 <td>${user.name}</td>
                 <td>${user.surname}</td>
-                <td>${user.birthDate}</td>
                 <td>${user.login}</td>
+                <td>${user.gender}</td>
                 <td>${user.weight}</td>
+                <td>${user.isDeleted}</td>
+                <td>${user.created}</td>
+                <td>${user.changed}</td>
+                <td>${user.birthDate}</td>
                 <td>
                     <button>Edit</button>
                 </td>
