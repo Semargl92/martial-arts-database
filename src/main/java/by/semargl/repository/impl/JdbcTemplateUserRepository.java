@@ -90,7 +90,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
         }
 
         final String updateQuery = "update users set name=:name, surname=:surname, login=:login, gender=:gender, " +
-                "weight=:weight, is_deleted=:isDeleted, created=:created, changed=:changed, birth_date=:birthDate where id=:id;";
+                "weight=:weight, is_deleted=:isDeleted, changed=:changed, birth_date=:birthDate where id=:id;";
 
         entity.setChanged(new Date(System.currentTimeMillis()));
         MapSqlParameterSource params = generateUserParamsMap(entity);

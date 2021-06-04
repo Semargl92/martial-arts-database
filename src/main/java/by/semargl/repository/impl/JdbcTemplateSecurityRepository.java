@@ -90,7 +90,7 @@ public class JdbcTemplateSecurityRepository implements SecurityRepository {
         }
 
         final String updateQuery = "update security set role=:role, user_id=:userId, is_deleted=:isDeleted, " +
-                "created=:created, changed=:changed where id=:id;";
+                "changed=:changed where id=:id;";
 
         entity.setChanged(new Date(System.currentTimeMillis()));
         MapSqlParameterSource params = generateSecurityParamsMap(entity);
