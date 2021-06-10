@@ -5,14 +5,12 @@ import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.UserColumn;
 import by.semargl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -23,9 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-@Component
-@Primary
-
 public class JdbcTemplateUserRepository implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
