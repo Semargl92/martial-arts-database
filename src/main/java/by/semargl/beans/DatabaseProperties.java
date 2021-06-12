@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-@Configuration
+/*@Configuration
 @PropertySource("classpath:database.properties")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Data */
 public class DatabaseProperties {
 
-    @Value("${driverName}")
+  /*  @Value("${driverName}")
     private String driverName;
 
     @Value("${url}")
@@ -24,6 +24,6 @@ public class DatabaseProperties {
     private String login;
 
     @Value("${password}")
-    private String password;
+    private String password; */
 
 }
