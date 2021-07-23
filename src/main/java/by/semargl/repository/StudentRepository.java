@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface StudentRepository extends CrudOperations<Long, Student>{
 
-    List<Student> findStudentsByQuery(Integer limit, String query);
+    List<Student> findStudentsByGrade(Integer limit, Long grade);
 
     void batchInsert(List<Student> students);
 }

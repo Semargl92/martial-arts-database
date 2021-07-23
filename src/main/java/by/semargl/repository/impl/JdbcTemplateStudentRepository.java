@@ -5,14 +5,12 @@ import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.StudentColumn;
 import by.semargl.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -23,9 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-@Component
-@Primary
-
 public class JdbcTemplateStudentRepository implements StudentRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -117,11 +112,11 @@ public class JdbcTemplateStudentRepository implements StudentRepository {
     }
 
     @Override
-    public List<Student> findStudentsByQuery(Integer limit, String query) {
-        final String searchQuery = "select * from students where name like :query limit :limit";
+    public List<Student> findStudentsByGrade(Integer limit, Long grade) {
+        final String searchQuery = "select * from students where grade_id = :grade limit :limit";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("query", "%" + query + "%");
+        params.addValue("grade", grade);
         params.addValue("limit", limit);
 
         return namedParameterJdbcTemplate.query(searchQuery, params, this::getStudentRowMapper);
