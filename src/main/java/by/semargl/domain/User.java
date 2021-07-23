@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.sql.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Cacheable("users")
 public class User {
 
     private Long id;

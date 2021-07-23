@@ -1,6 +1,10 @@
 package by.semargl.beans;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -9,30 +13,25 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
+import java.util.concurrent.TimeUnit;
 
-//@Configuration
+@Configuration
+@EnableCaching
 public class ApplicationBeans {
 
-   /* @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
+    @Bean
+    public CacheManager cacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("users");
+        cacheManager.setCaffeine(cacheProperties());
+        return cacheManager;
     }
 
-    @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
-        return new NamedParameterJdbcTemplate(dataSource);
+    public Caffeine<Object, Object> cacheProperties() {
+        return Caffeine.newBuilder()
+                .initialCapacity(10)
+                .maximumSize(50)
+                .expireAfterAccess(200, TimeUnit.SECONDS)
+                .weakKeys()
+                .recordStats();
     }
-
-    @Bean
-    public DataSource hikariDataSource(DatabaseProperties databaseProperties) {
-        HikariDataSource hikariDataSource = new HikariDataSource();
-
-        hikariDataSource.setJdbcUrl(databaseProperties.getUrl());
-        hikariDataSource.setUsername(databaseProperties.getLogin());
-        hikariDataSource.setPassword(databaseProperties.getPassword());
-        hikariDataSource.setDriverClassName(databaseProperties.getDriverName());
-        hikariDataSource.setMaximumPoolSize(10);
-
-        return hikariDataSource;
-    }*/
 }

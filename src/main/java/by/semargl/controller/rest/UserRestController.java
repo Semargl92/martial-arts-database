@@ -30,6 +30,11 @@ public class UserRestController {
         return userRepository.findAll();
     }
 
+    @GetMapping("/user/{userId}")
+    public User findOne(@PathVariable("userId") Long id) {
+        System.out.println("In rest controller");
+        return userRepository.findOne(id);
+    }
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Secret-Key", dataType = "string", paramType = "header",

@@ -5,6 +5,7 @@ import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.UserColumn;
 import by.semargl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -38,6 +39,7 @@ public class JdbcTemplateUserRepository implements UserRepository {
         return jdbcTemplate.query("select * from users order by id desc", this::getUserRowMapper);
     }
 
+    @Cacheable("users")
     @Override
     public User findOne(Long id) throws NoSuchEntityException {
         User chosenOne;
