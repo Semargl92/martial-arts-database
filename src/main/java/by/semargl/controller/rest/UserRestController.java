@@ -2,10 +2,15 @@ package by.semargl.controller.rest;
 
 import by.semargl.controller.requests.UserCreateRequest;
 import by.semargl.domain.User;
+import by.semargl.domain.hibernate.HibernateUser;
 import by.semargl.repository.UserRepository;
+import by.semargl.repository.springdata.UserDataRepository;
 import by.semargl.util.UserGenerator;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +28,12 @@ public class UserRestController {
 
     private final UserRepository userRepository;
     private final UserGenerator userGenerator;
+    private final UserDataRepository userDataRepository;
 
     @GetMapping
-    public List<User> findAll() {
+    public Page<HibernateUser> findAll() {
         System.out.println("In rest controller");
-        return userRepository.findAll();
+        return userDataRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     @GetMapping("/user/{userId}")
