@@ -1,11 +1,11 @@
 package by.semargl.repository;
 
 import by.semargl.domain.Grade;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface GradeRepository extends CrudOperations<Long, Grade> {
-    List<Grade> findGradeByQuery(Integer limit, String query);
-
-    void batchInsert(List<Grade> grades);
+@Repository
+public interface GradeRepository extends CrudRepository<Grade, Long>, PagingAndSortingRepository<Grade, Long>, JpaRepository<Grade, Long> {
 }
