@@ -1,27 +1,12 @@
 package by.semargl.controller;
 
-import by.semargl.controller.command.Commands;
-import by.semargl.domain.User;
-import by.semargl.repository.UserRepository;
-import com.google.gson.Gson;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Collections;
 
 //@Controller
 //@RestController
 public class FrontController extends HttpServlet {
 
-    @Autowired
+  /*  @Autowired
     public UserRepository userRepository;
 
     public FrontController() {
@@ -56,7 +41,7 @@ public class FrontController extends HttpServlet {
     }
 
 
-    private void resolveGetRequestCommands(HttpServletRequest req, Commands commandName) {
+   /* private void resolveGetRequestCommands(HttpServletRequest req, Commands commandName) {
 
         //http://localhost:8080/test/FrontController?command=findAll&page=0&limit=10 (add offset to query)
 
@@ -113,5 +98,5 @@ public class FrontController extends HttpServlet {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-    }
+    } */
 }

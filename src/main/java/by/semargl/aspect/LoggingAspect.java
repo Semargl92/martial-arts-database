@@ -24,7 +24,7 @@ public class LoggingAspect {
 //        log.info("Method " + joinPoint.getSignature().getName() + " finished");
 //    }
 
-    @Pointcut("execution(* by.semargl.repository.impl.JdbcTemplateUserRepository.*(..))")
+    @Pointcut("execution(* by.semargl.repository.UserRepository.*(..))")
     public void aroundRepositoryPointcut() {
     }
 

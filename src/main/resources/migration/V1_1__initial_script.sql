@@ -6,7 +6,7 @@ create table if not exists users
     name varchar(200) not null,
     surname varchar(200) not null,
     login varchar(200),
-    gender varchar(100),
+    gender varchar(100) default 'NOT_SELECTED'::character varying not null,
     weight real,
     is_deleted boolean not null,
     created timestamp,
@@ -34,7 +34,7 @@ create table if not exists martial_arts
         constraint martial_arts_pkey
             primary key,
     name varchar(100) not null,
-    type varchar(100),
+    type varchar(100) default 'NOT_SELECTED'::character varying not null,
     origin varchar(100) not null,
     foundation_date date,
     description varchar(1000),
@@ -60,7 +60,7 @@ create table if not exists grades
     name varchar(100) not null,
     duration_for_next_lvl integer,
     number_of_trainings_days integer,
-    exam_type varchar(100),
+    exam_description varchar(2000),
     martial_art_id bigint not null
         constraint grades_martial_arts_id_fk
             references martial_arts
@@ -69,7 +69,7 @@ create table if not exists grades
 alter table grades owner to postgres;
 
 create index if not exists grades_exam
-    on grades (exam_type);
+    on grades (exam_description);
 
 create index if not exists grades_name
     on grades (name);
@@ -144,7 +144,7 @@ create table if not exists exercises
             references grades,
     description varchar(2000),
     resources varchar(2000),
-    type varchar(200),
+    type varchar(200) default 'NOT_SELECTED'::character varying not null,
     is_weapon_technik boolean not null
 );
 
