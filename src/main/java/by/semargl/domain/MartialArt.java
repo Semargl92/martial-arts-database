@@ -1,33 +1,38 @@
 package by.semargl.domain;
 
-import lombok.AllArgsConstructor;
+import by.semargl.domain.enums.MartialArtType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.sql.Date;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "martial_arts")
 @Data
+@NoArgsConstructor
 public class MartialArt {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String name;
 
-    private String type;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private MartialArtType martialArtType = MartialArtType.NOT_SELECTED;
 
+    @Column
     private String origin;
 
-    private Date foundationDate;
+    @Column(name = "foundation_date")
+    private LocalDateTime foundationDate;
 
+    @Column
     private String description;
 
+    @Column(name = "weapon_technics_available")
     private Boolean weaponTechnicsAvailable;
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
 }

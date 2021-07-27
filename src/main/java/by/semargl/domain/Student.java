@@ -1,39 +1,45 @@
 package by.semargl.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.sql.Date;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "students")
 @Data
+@NoArgsConstructor
 public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "grade_id")
     private Long gradeId;
 
+    @Column(name = "teachers_user_id")
     private Long teachersUserId;
 
-    private Date lastExamDate;
+    @Column(name = "last_exam_date")
+    private LocalDateTime lastExamDate;
 
+    @Column(name = "numbers_of_trainings_days")
     private Integer numbersOfTrainingsDays;
 
-    private Date startDate;
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
 
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    private Date created;
+    @Column
+    private LocalDateTime created;
 
-    private Date changed;
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    @Column
+    private LocalDateTime changed;
 }

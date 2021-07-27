@@ -1,31 +1,37 @@
 package by.semargl.domain;
 
-import lombok.AllArgsConstructor;
+import by.semargl.domain.enums.ExerciseType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-@NoArgsConstructor
-@AllArgsConstructor
+import javax.persistence.*;
+
+@Entity
+@Table(name = "exercises")
 @Data
+@NoArgsConstructor
 public class Exercise {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String name;
 
+    @Column(name = "grade_id")
     private Long gradeId;
 
+    @Column
     private String description;
 
+    @Column
     private String resources;
 
-    private String type;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private ExerciseType exerciseType = ExerciseType.NOT_SELECTED;
 
+    @Column(name = "is_weapon_technik")
     private Boolean isWeaponTechnik;
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
 }
