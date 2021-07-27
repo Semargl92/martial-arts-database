@@ -2,9 +2,7 @@ package by.semargl.controller.rest;
 
 import by.semargl.controller.requests.UserCreateRequest;
 import by.semargl.domain.User;
-import by.semargl.domain.hibernate.HibernateUser;
 import by.semargl.repository.UserRepository;
-import by.semargl.repository.springdata.UserDataRepository;
 import by.semargl.util.UserGenerator;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -13,63 +11,43 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 //@ApiResponses(value = {
 //        @ApiResponse(code = 200, message = "Request was successfully performed!"),
 //        @ApiResponse(code = 500, message = "Internal server error! https://stackoverflow.com/questions/37405244/how-to-change-the-response-status-code-for-successful-operation-in-swagger")
 //})
-public class UserRestController {
+public class UserController {
 
     private final UserRepository userRepository;
     private final UserGenerator userGenerator;
-    private final UserDataRepository userDataRepository;
+
 
     @GetMapping
-    public Page<HibernateUser> findAll() {
+    public Page<User> findAll() {
         System.out.println("In rest controller");
-        return userDataRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
+        return userRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     @GetMapping("/user/{userId}")
     public User findOne(@PathVariable("userId") Long id) {
         System.out.println("In rest controller");
-        return userRepository.findOne(id);
-    }
-
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Secret-Key", dataType = "string", paramType = "header",
-                    value = "Secret header for secret functionality!! Hoho")
-    })
-    @GetMapping("/hello")
-    public List<User> securedFindAll(HttpServletRequest request) {
-        return userRepository.findAll();
-    }
-
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "limit", dataType = "string", paramType = "query", value = "Limit users in result list"),
-            @ApiImplicitParam(name = "query", dataType = "string", paramType = "query", value = "Search query"),
-    })
-    @GetMapping("/search")
-    public List<User> userSearch(@RequestParam Integer limit, @RequestParam String query) {
-        return userRepository.findUsersByQuery(limit, query);
+        return userRepository.findById(id).orElseThrow();
     }
 
     @ApiOperation(value = "Creating one user")
     @PostMapping
     public User createUser(@RequestBody UserCreateRequest createRequest) {
-        User generatedUser = userGenerator.generate();
-        generatedUser.setWeight(createRequest.getWeight());
-        generatedUser.setLogin(createRequest.getLogin());
-        generatedUser.setName(createRequest.getName());
-        generatedUser.setSurname(createRequest.getSurname());
+        User user = new User();
+        user.setWeight(createRequest.getWeight());
+        user.setLogin(createRequest.getLogin());
+        user.setName(createRequest.getName());
+        user.setSurname(createRequest.getSurname());
 
-        return userRepository.save(generatedUser);
+        return userRepository.save(user);
     }
 
     @ApiOperation(value = "Generate auto users in system")
@@ -89,4 +67,22 @@ public class UserRestController {
 //
 //        return userRepository.findAll();
     }
+
+   /* @ApiImplicitParams({
+            @ApiImplicitParam(name = "Secret-Key", dataType = "string", paramType = "header",
+                    value = "Secret header for secret functionality!! Hoho")
+    })
+    @GetMapping("/hello")
+    public List<User> securedFindAll(HttpServletRequest request) {
+        return userRepository.findAll();
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "limit", dataType = "string", paramType = "query", value = "Limit users in result list"),
+            @ApiImplicitParam(name = "query", dataType = "string", paramType = "query", value = "Search query"),
+    })
+    @GetMapping("/search")
+    public List<User> userSearch(@RequestParam Integer limit, @RequestParam String query) {
+        return userRepository.findUsersByQuery(limit, query);
+    } */
 }

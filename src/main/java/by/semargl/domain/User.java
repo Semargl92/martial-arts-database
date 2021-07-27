@@ -1,48 +1,49 @@
 package by.semargl.domain;
 
-import lombok.AllArgsConstructor;
+import by.semargl.domain.enums.Gender;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.cache.annotation.Cacheable;
 
-import java.sql.Date;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "users")
 @Data
+@NoArgsConstructor
 @Cacheable("users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String name;
 
+    @Column
     private String surname;
 
+    @Column
     private String login;
 
-    private String gender;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Gender gender = Gender.NOT_SELECTED;
 
+    @Column
     private Float weight;
 
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    private Date created;
+    @Column
+    private LocalDateTime created;
 
-    private Date changed;
+    @Column
+    private LocalDateTime changed;
 
-    private Date birthDate;
-
-    public User(Long id, String name, String surname) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    @Column(name = "birth_date")
+    private LocalDateTime birthDate;
 }
