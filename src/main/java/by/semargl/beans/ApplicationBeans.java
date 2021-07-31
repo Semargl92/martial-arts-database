@@ -1,18 +1,15 @@
 package by.semargl.beans;
 
+import by.semargl.controller.requests.mappers.UserMapper;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.zaxxer.hikari.HikariDataSource;
+import org.mapstruct.factory.Mappers;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.sql.DataSource;
+
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -33,5 +30,10 @@ public class ApplicationBeans {
                 .expireAfterAccess(200, TimeUnit.SECONDS)
                 .weakKeys()
                 .recordStats();
+    }
+
+    @Bean
+    public UserMapper userMapper() {
+       return Mappers.getMapper(UserMapper.class);
     }
 }

@@ -1,6 +1,7 @@
 package by.semargl.controller.rest;
 
-import by.semargl.controller.requests.UserCreateRequest;
+import by.semargl.controller.requests.UserRequest;
+import by.semargl.controller.requests.mappers.UserMapper;
 import by.semargl.domain.User;
 import by.semargl.repository.UserRepository;
 import by.semargl.util.UserGenerator;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,28 +26,63 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final UserGenerator userGenerator;
+    private final UserMapper userMapper;
 
-
-    @GetMapping
+    @ApiOperation(value = "find all users")
+    @GetMapping("/all/admin")
     public Page<User> findAll() {
-        System.out.println("In rest controller");
+        System.out.println("find all");
         return userRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
     }
 
+    @ApiOperation(value = "find all existing users")
+    @GetMapping("/all")
+    public List<User> findAllExisting() {
+        System.out.println("find all existing");
+        return userRepository.findByIsDeletedFalse();
+    }
+
+    @ApiOperation(value = "find one user")
     @GetMapping("/user/{userId}")
     public User findOne(@PathVariable("userId") Long id) {
-        System.out.println("In rest controller");
+        System.out.println("find one");
         return userRepository.findById(id).orElseThrow();
     }
 
-    @ApiOperation(value = "Creating one user")
-    @PostMapping
-    public User createUser(@RequestBody UserCreateRequest createRequest) {
+    @ApiOperation(value = "remove user from the database")
+    @GetMapping("/delete/admin/{userId}")
+    public void delete(@PathVariable("userId") Long id) {
+        System.out.println("hard delete");
+        userRepository.deleteById(id);
+    }
+
+    @ApiOperation(value = "set user as deleted")
+    @GetMapping("/delete/{userId}")
+    public void softDelete(@PathVariable("userId") Long id) {
+        System.out.println("soft delete");
+        userRepository.softDelete(id);
+    }
+
+    @ApiOperation(value = "create one user")
+    @PostMapping("/create")
+    public User createUser(@RequestBody UserRequest userRequest) {
         User user = new User();
-        user.setWeight(createRequest.getWeight());
-        user.setLogin(createRequest.getLogin());
-        user.setName(createRequest.getName());
-        user.setSurname(createRequest.getSurname());
+
+        userMapper.updateUserFromUserRequest(userRequest, user);
+        user.setCreated(LocalDateTime.now());
+        user.setChanged(LocalDateTime.now());
+        user.setIsDeleted(false);
+
+        return userRepository.save(user);
+    }
+
+    @ApiOperation(value = "update one user")
+    @PutMapping("/update/{userId}")
+    public User updateUser(@PathVariable("userId") Long id, @RequestBody UserRequest userRequest) {
+        User user = userRepository.findById(id).orElseThrow();
+
+        userMapper.updateUserFromUserRequest(userRequest, user);
+        user.setChanged(LocalDateTime.now());
 
         return userRepository.save(user);
     }
