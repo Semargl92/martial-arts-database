@@ -4,7 +4,6 @@ import by.semargl.controller.requests.UserRequest;
 import by.semargl.controller.requests.mappers.UserMapper;
 import by.semargl.domain.User;
 import by.semargl.repository.UserRepository;
-import by.semargl.util.UserGenerator;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,22 +12,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-//@ApiResponses(value = {
-//        @ApiResponse(code = 200, message = "Request was successfully performed!"),
-//        @ApiResponse(code = 500, message = "Internal server error! https://stackoverflow.com/questions/37405244/how-to-change-the-response-status-code-for-successful-operation-in-swagger")
-//})
 public class UserController {
 
     private final UserRepository userRepository;
-    private final UserGenerator userGenerator;
     private final UserMapper userMapper;
 
     @ApiOperation(value = "find all users")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Users were successfully found")
+    })
     @GetMapping("/all/admin")
     public Page<User> findAll() {
         System.out.println("find all");
@@ -36,13 +34,31 @@ public class UserController {
     }
 
     @ApiOperation(value = "find all existing users")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Users were successfully found")
+    })
     @GetMapping("/all")
-    public List<User> findAllExisting() {
+    public List<UserRequest> findAllExisting() {
         System.out.println("find all existing");
-        return userRepository.findByIsDeletedFalse();
+        List<User> notDeletedUsers = userRepository.findByIsDeletedFalse();
+        List<UserRequest> result = new ArrayList<>();
+        for (User user : notDeletedUsers) {
+            UserRequest request = new UserRequest();
+            userMapper.updateUserRequestFromUser(user, request);
+            result.add(request);
+        }
+        return result;
     }
 
     @ApiOperation(value = "find one user")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
+                    value = "id of user for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully found"),
+            @ApiResponse(code = 500, message = "There is no user with such id")
+    })
     @GetMapping("/user/{userId}")
     public User findOne(@PathVariable("userId") Long id) {
         System.out.println("find one");
@@ -50,20 +66,40 @@ public class UserController {
     }
 
     @ApiOperation(value = "remove user from the database")
-    @GetMapping("/delete/admin/{userId}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
+                    value = "id of user for deleting from database", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully deleted"),
+            @ApiResponse(code = 500, message = "There is no user with such id")
+    })
+    @DeleteMapping("/delete/admin/{userId}")
     public void delete(@PathVariable("userId") Long id) {
         System.out.println("hard delete");
         userRepository.deleteById(id);
     }
 
     @ApiOperation(value = "set user as deleted")
-    @GetMapping("/delete/{userId}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
+                    value = "id of user for soft delete", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully deleted"),
+            @ApiResponse(code = 500, message = "There is no user with such id")
+    })
+    @PutMapping("/delete/{userId}")
     public void softDelete(@PathVariable("userId") Long id) {
         System.out.println("soft delete");
         userRepository.softDelete(id);
     }
 
     @ApiOperation(value = "create one user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully created"),
+            @ApiResponse(code = 500, message = "User with this login already exists, please try another option")
+    })
     @PostMapping("/create")
     public User createUser(@RequestBody UserRequest userRequest) {
         User user = new User();
@@ -77,6 +113,14 @@ public class UserController {
     }
 
     @ApiOperation(value = "update one user")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
+                    value = "id of user for update", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully updated"),
+            @ApiResponse(code = 500, message = "There is no user with such id")
+    })
     @PutMapping("/update/{userId}")
     public User updateUser(@PathVariable("userId") Long id, @RequestBody UserRequest userRequest) {
         User user = userRepository.findById(id).orElseThrow();
@@ -86,40 +130,4 @@ public class UserController {
 
         return userRepository.save(user);
     }
-
-    @ApiOperation(value = "Generate auto users in system")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "usersCount", dataType = "string", paramType = "path",
-                    value = "Count of generated users", required = true, defaultValue = "100")
-    })
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Users was successfully created!"),
-            @ApiResponse(code = 500, message = "Internal server error! https://stackoverflow.com/questions/37405244/how-to-change-the-response-status-code-for-successful-operation-in-swagger")
-    })
-    @PostMapping("/generate/{usersCount}")
-    public List<User> generateUsers(@PathVariable("usersCount") Integer count) {
-        throw new RuntimeException("Haha!");
-//        List<User> generateUsers = userGenerator.generate(count);
-//        userRepository.batchInsert(generateUsers);
-//
-//        return userRepository.findAll();
-    }
-
-   /* @ApiImplicitParams({
-            @ApiImplicitParam(name = "Secret-Key", dataType = "string", paramType = "header",
-                    value = "Secret header for secret functionality!! Hoho")
-    })
-    @GetMapping("/hello")
-    public List<User> securedFindAll(HttpServletRequest request) {
-        return userRepository.findAll();
-    }
-
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "limit", dataType = "string", paramType = "query", value = "Limit users in result list"),
-            @ApiImplicitParam(name = "query", dataType = "string", paramType = "query", value = "Search query"),
-    })
-    @GetMapping("/search")
-    public List<User> userSearch(@RequestParam Integer limit, @RequestParam String query) {
-        return userRepository.findUsersByQuery(limit, query);
-    } */
 }
