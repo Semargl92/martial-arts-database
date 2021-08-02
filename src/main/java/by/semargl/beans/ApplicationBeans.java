@@ -1,6 +1,8 @@
 package by.semargl.beans;
 
 import by.semargl.controller.requests.mappers.ExerciseMapper;
+import by.semargl.controller.requests.mappers.GradeMapper;
+import by.semargl.controller.requests.mappers.MartialArtMapper;
 import by.semargl.controller.requests.mappers.UserMapper;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.mapstruct.factory.Mappers;
@@ -41,5 +43,15 @@ public class ApplicationBeans {
     @Bean
     public ExerciseMapper exerciseMapper() {
         return Mappers.getMapper(ExerciseMapper.class);
+    }
+
+    @Bean
+    public GradeMapper gradeMapper() {
+        return Mappers.getMapper(GradeMapper.class);
+    }
+
+    @Bean
+    public MartialArtMapper martialArtMapper() {
+        return Mappers.getMapper(MartialArtMapper.class);
     }
 }

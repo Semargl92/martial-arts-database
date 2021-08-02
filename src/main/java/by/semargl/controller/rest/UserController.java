@@ -38,7 +38,6 @@ public class UserController {
     })
     @GetMapping("/all")
     public List<UserRequest> findAllExisting() {
-        System.out.println("find all existing");
         List<User> notDeletedUsers = userRepository.findByIsDeletedFalse();
         List<UserRequest> result = new ArrayList<>();
         for (User user : notDeletedUsers) {
