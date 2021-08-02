@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@ApiOperation("Class for creating user entity")
+@ApiOperation("Class for creating and updating user entity")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

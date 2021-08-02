@@ -1,5 +1,6 @@
 package by.semargl.beans;
 
+import by.semargl.controller.requests.mappers.ExerciseMapper;
 import by.semargl.controller.requests.mappers.UserMapper;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.mapstruct.factory.Mappers;
@@ -35,5 +36,10 @@ public class ApplicationBeans {
     @Bean
     public UserMapper userMapper() {
        return Mappers.getMapper(UserMapper.class);
+    }
+
+    @Bean
+    public ExerciseMapper exerciseMapper() {
+        return Mappers.getMapper(ExerciseMapper.class);
     }
 }

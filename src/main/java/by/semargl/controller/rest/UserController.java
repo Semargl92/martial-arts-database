@@ -29,7 +29,6 @@ public class UserController {
     })
     @GetMapping("/all/admin")
     public Page<User> findAll() {
-        System.out.println("find all");
         return userRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
     }
 
@@ -61,7 +60,6 @@ public class UserController {
     })
     @GetMapping("/user/{userId}")
     public User findOne(@PathVariable("userId") Long id) {
-        System.out.println("find one");
         return userRepository.findById(id).orElseThrow();
     }
 
@@ -76,7 +74,6 @@ public class UserController {
     })
     @DeleteMapping("/delete/admin/{userId}")
     public void delete(@PathVariable("userId") Long id) {
-        System.out.println("hard delete");
         userRepository.deleteById(id);
     }
 
@@ -91,7 +88,6 @@ public class UserController {
     })
     @PutMapping("/delete/{userId}")
     public void softDelete(@PathVariable("userId") Long id) {
-        System.out.println("soft delete");
         userRepository.softDelete(id);
     }
 
