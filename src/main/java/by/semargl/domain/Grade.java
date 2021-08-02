@@ -1,5 +1,6 @@
 package by.semargl.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,8 @@ public class Grade {
     @Column(name = "exam_description")
     private String examDescription;
 
-    @Column(name = "martial_art_id")
-    private Long martialArtId;
+    @ManyToOne
+    @JoinColumn(name = "martial_art_id")
+    @JsonBackReference
+    private MartialArt martialArt;
 }

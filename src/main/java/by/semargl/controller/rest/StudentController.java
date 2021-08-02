@@ -4,6 +4,7 @@ import by.semargl.controller.requests.StudentRequest;
 import by.semargl.controller.requests.mappers.StudentMapper;
 import by.semargl.domain.Student;
 import by.semargl.repository.StudentRepository;
+import by.semargl.repository.UserRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 public class StudentController {
 
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
     private final StudentMapper studentMapper;
 
     @ApiOperation(value = "find all students")
@@ -91,6 +93,7 @@ public class StudentController {
         student.setCreated(LocalDateTime.now());
         student.setChanged(LocalDateTime.now());
         student.setIsDeleted(false);
+        student.setUser(userRepository.findById(studentRequest.getUserId()).orElseThrow());
 
         return studentRepository.save(student);
     }

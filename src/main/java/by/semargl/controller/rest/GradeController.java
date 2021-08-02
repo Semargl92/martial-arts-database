@@ -4,6 +4,7 @@ import by.semargl.controller.requests.GradeRequest;
 import by.semargl.controller.requests.mappers.GradeMapper;
 import by.semargl.domain.Grade;
 import by.semargl.repository.GradeRepository;
+import by.semargl.repository.MartialArtRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class GradeController {
 
     private final GradeRepository gradeRepository;
+    private final MartialArtRepository martialArtRepository;
     private final GradeMapper gradeMapper;
 
     @ApiOperation(value = "find all grades")
@@ -65,6 +67,7 @@ public class GradeController {
         Grade grade = new Grade();
 
         gradeMapper.updateGradeFromGradeRequest(gradeRequest, grade);
+        grade.setMartialArt(martialArtRepository.findById(gradeRequest.getMartialArtId()).orElseThrow());
 
         return gradeRepository.save(grade);
     }

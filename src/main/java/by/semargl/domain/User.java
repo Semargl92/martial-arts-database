@@ -1,18 +1,25 @@
 package by.semargl.domain;
 
 import by.semargl.domain.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @Cacheable("users")
+@EqualsAndHashCode(exclude = {
+        "students"
+})
 public class User {
 
     @Id
@@ -46,4 +53,8 @@ public class User {
 
     @Column(name = "birth_date")
     private LocalDateTime birthDate;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Student> students = Collections.emptySet();
 }
