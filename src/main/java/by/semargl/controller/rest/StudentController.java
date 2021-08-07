@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,8 +36,15 @@ public class StudentController {
             @ApiResponse(code = 200, message = "Students were successfully found")
     })
     @GetMapping("/all")
-    public List<Student> findAllExisting() {
-        return studentRepository.findByIsDeletedFalse();
+    public List<StudentRequest> findAllExisting() {
+        List<Student> notDeletedStudents = studentRepository.findByIsDeletedFalse();
+        List<StudentRequest> result = new ArrayList<>();
+        for (Student student: notDeletedStudents) {
+            StudentRequest studentRequest = new StudentRequest();
+            studentMapper.updateStudentRequestFromStudent(student, studentRequest);
+            result.add(studentRequest);
+        }
+        return result;
     }
 
     @ApiOperation(value = "find one student")
@@ -48,9 +56,26 @@ public class StudentController {
             @ApiResponse(code = 200, message = "Student was successfully found"),
             @ApiResponse(code = 500, message = "There is no student with such id")
     })
-    @GetMapping("/{studentId}")
+    @GetMapping("/admin/{studentId}")
     public Student findOne(@PathVariable("studentId") Long id) {
         return studentRepository.findById(id).orElseThrow();
+    }
+
+    @ApiOperation(value = "find one existing student")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "studentId", dataType = "string", paramType = "path",
+                    value = "id of student for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Student was successfully found"),
+            @ApiResponse(code = 500, message = "There is no student with such id")
+    })
+    @GetMapping("/{studentId}")
+    public StudentRequest findOneExisting(@PathVariable("studentId") Long id) {
+        StudentRequest studentRequest = new StudentRequest();
+        Student student = studentRepository.findByIdAndIsDeletedFalse(id).orElseThrow();
+        studentMapper.updateStudentRequestFromStudent(student, studentRequest);
+        return studentRequest;
     }
 
     @ApiOperation(value = "remove student from the database")
@@ -113,6 +138,9 @@ public class StudentController {
 
         studentMapper.updateStudentFromStudentRequest(studentRequest, student);
         student.setChanged(LocalDateTime.now());
+        if (studentRequest.getUserId() != null ) {
+            student.setUser(userRepository.findById(studentRequest.getUserId()).orElseThrow());
+        }
 
         return studentRepository.save(student);
     }

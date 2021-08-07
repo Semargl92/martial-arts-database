@@ -86,6 +86,9 @@ public class GradeController {
         Grade grade = gradeRepository.findById(id).orElseThrow();
 
         gradeMapper.updateGradeFromGradeRequest(gradeRequest, grade);
+        if (gradeRequest.getMartialArtId() != null ) {
+            grade.setMartialArt(martialArtRepository.findById(gradeRequest.getMartialArtId()).orElseThrow());
+        }
 
         return gradeRepository.save(grade);
     }

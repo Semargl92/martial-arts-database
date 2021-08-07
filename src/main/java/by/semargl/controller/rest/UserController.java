@@ -48,6 +48,20 @@ public class UserController {
         return result;
     }
 
+    @ApiOperation(value = "find one existing user")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
+                    value = "id of user for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully found"),
+            @ApiResponse(code = 500, message = "There is no user with such id")
+    })
+    @GetMapping("/user/admin/{userId}")
+    public User findOne(@PathVariable("userId") Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
     @ApiOperation(value = "find one user")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
@@ -58,8 +72,11 @@ public class UserController {
             @ApiResponse(code = 500, message = "There is no user with such id")
     })
     @GetMapping("/user/{userId}")
-    public User findOne(@PathVariable("userId") Long id) {
-        return userRepository.findById(id).orElseThrow();
+    public UserRequest findOneExisting(@PathVariable("userId") Long id) {
+        UserRequest request = new UserRequest();
+        User user = userRepository.findByIdAndIsDeletedFalse(id).orElseThrow();
+        userMapper.updateUserRequestFromUser(user, request);
+        return request;
     }
 
     @ApiOperation(value = "remove user from the database")

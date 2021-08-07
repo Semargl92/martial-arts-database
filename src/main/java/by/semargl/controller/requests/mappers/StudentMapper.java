@@ -12,4 +12,7 @@ public interface StudentMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateStudentFromStudentRequest(StudentRequest studentRequest, @MappingTarget Student student);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateStudentRequestFromStudent(Student student, @MappingTarget StudentRequest studentRequest);
 }

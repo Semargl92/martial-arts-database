@@ -23,11 +23,14 @@ public interface UserRepository extends CrudRepository<User, Long>, PagingAndSor
 
     @Modifying
     @Transactional
-    @Query(value = "update User u set u.isDeleted = true where u.id = :userID")
+    @Query(value = "update User u set u.isDeleted = true, u.changed = CURRENT_TIMESTAMP where u.id = :userID")
     void softDelete (@Param("userID") Long id);
 
     @Cacheable("users")
     List<User> findByIsDeletedFalse();
+
+    @Cacheable("users")
+    Optional<User> findByIdAndIsDeletedFalse(Long id);
 
     @Cacheable("users")
     @Query(value = "select u from User u where u.id < :userID")

@@ -11,14 +11,17 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends CrudRepository<Student, Long>, PagingAndSortingRepository<Student, Long>, JpaRepository<Student, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update Student s set s.isDeleted = true where s.id = :studentID")
+    @Query(value = "update Student s set s.isDeleted = true, s.changed = CURRENT_TIMESTAMP where s.id = :studentID")
     void softDelete (@Param("studentID") Long id);
 
     List<Student> findByIsDeletedFalse();
+
+    Optional<Student> findByIdAndIsDeletedFalse(Long id);
 }
