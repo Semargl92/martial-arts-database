@@ -4,6 +4,7 @@ import by.semargl.controller.requests.ExerciseRequest;
 import by.semargl.controller.requests.mappers.ExerciseMapper;
 import by.semargl.domain.Exercise;
 import by.semargl.repository.ExerciseRepository;
+import by.semargl.repository.GradeRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ExerciseController {
 
     private final ExerciseRepository exerciseRepository;
+    private final GradeRepository gradeRepository;
     private final ExerciseMapper exerciseMapper;
 
     @ApiOperation(value = "find all exercises")
@@ -64,6 +66,7 @@ public class ExerciseController {
         Exercise exercise = new Exercise();
 
         exerciseMapper.updateExerciseFromExerciseRequest(exerciseRequest, exercise);
+        exercise.setGrade(gradeRepository.findById(exerciseRequest.getGradeId()).orElseThrow());
 
         return exerciseRepository.save(exercise);
     }
@@ -82,6 +85,9 @@ public class ExerciseController {
         Exercise exercise = exerciseRepository.findById(id).orElseThrow();
 
         exerciseMapper.updateExerciseFromExerciseRequest(exerciseRequest, exercise);
+        if (exerciseRequest.getGradeId() != null ) {
+            exercise.setGrade(gradeRepository.findById(exerciseRequest.getGradeId()).orElseThrow());
+        }
 
         return exerciseRepository.save(exercise);
     }

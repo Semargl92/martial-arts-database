@@ -17,9 +17,6 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "grade_id")
-    private Long gradeId;
-
     @Column(name = "teachers_user_id")
     private Long teachersUserId;
 
@@ -45,4 +42,9 @@ public class Student {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "grade_id")
+    @JsonBackReference
+    private Grade grade;
 }

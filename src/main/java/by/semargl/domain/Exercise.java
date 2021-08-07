@@ -1,6 +1,7 @@
 package by.semargl.domain;
 
 import by.semargl.domain.enums.ExerciseType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +20,6 @@ public class Exercise {
     @Column
     private String name;
 
-    @Column(name = "grade_id")
-    private Long gradeId;
-
     @Column
     private String description;
 
@@ -34,4 +32,9 @@ public class Exercise {
 
     @Column(name = "is_weapon_technik")
     private Boolean isWeaponTechnik;
+
+    @ManyToOne
+    @JoinColumn(name = "grade_id")
+    @JsonBackReference
+    private Grade grade;
 }
