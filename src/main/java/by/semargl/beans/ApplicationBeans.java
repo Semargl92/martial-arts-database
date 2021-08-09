@@ -56,4 +56,9 @@ public class ApplicationBeans {
     public StudentMapper studentMapper() {
         return Mappers.getMapper(StudentMapper.class);
     }
+
+    @Bean
+    public UserCreateMapper userCreateMapper() {
+        return Mappers.getMapper(UserCreateMapper.class);
+    }
 }

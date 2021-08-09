@@ -1,5 +1,6 @@
 package by.semargl.controller.requests;
 
+import by.semargl.domain.Credentials;
 import by.semargl.domain.enums.Gender;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -8,11 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@ApiOperation("Class for updating user entity")
+@ApiOperation("Class for creating user entity")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
+public class UserCreateRequest {
 
     private String name;
 
@@ -24,5 +25,5 @@ public class UserRequest {
 
     private LocalDateTime birthDate;
 
-    private String login;
+    private Credentials credentials;
 }

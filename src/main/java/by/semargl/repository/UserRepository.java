@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>, PagingAndSortingRepository<User, Long>, JpaRepository<User, Long> {
 
-    Optional<User> findByLogin(String login);
+    //Optional<User> findByLogin(String login);
 
     @Modifying
     @Transactional
