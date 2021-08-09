@@ -11,10 +11,14 @@ create table if not exists users
     is_deleted boolean not null,
     created timestamp,
     changed timestamp,
-    birth_date date
+    birth_date date,
+    password varchar(200)
 );
 
 alter table users owner to postgres;
+
+create unique index users_id_uindex
+    on users (id);
 
 create unique index if not exists users_login_uindex
     on users (login);
@@ -27,6 +31,9 @@ create index if not exists users_surname
 
 create index if not exists users_gender
     on users (gender);
+
+create index users_password_index
+    on users (password);
 
 create table if not exists martial_arts
 (
@@ -108,31 +115,6 @@ create index if not exists students_teacher
 create index if not exists students_user_id
     on students (user_id);
 
-create table if not exists security
-(
-    id bigserial not null
-        constraint security_pkey
-            primary key,
-    role varchar not null,
-    user_id bigint not null
-        constraint security_users_id_fk
-            references users,
-    is_deleted boolean not null,
-    created timestamp,
-    changed timestamp
-);
-
-alter table security owner to postgres;
-
-create index if not exists security_role
-    on security (role);
-
-create index if not exists security_user_id
-    on security (user_id);
-
-create index if not exists security_is_deleted
-    on security (is_deleted);
-
 create table if not exists exercises
 (
     id bigserial not null
@@ -158,3 +140,45 @@ create index if not exists exercises_type
 
 create index if not exists exercises_weapon
     on exercises (is_weapon_technik);
+
+create table roles
+(
+    id serial not null
+        constraint roles_pk
+            primary key,
+    role_name varchar(20) not null
+);
+
+alter table roles owner to postgres;
+
+create unique index roles_role_name_uindex
+    on roles (role_name);
+
+create table if not exists user_roles
+(
+    id bigserial not null
+        constraint user_roles_pk
+            primary key,
+    role_id integer not null
+        constraint user_roles_roles_id_fk
+            references roles
+            on update cascade on delete cascade,
+    user_id bigint not null
+        constraint user_roles_users_id_fk
+            references users
+            on update cascade on delete cascade,
+    is_deleted boolean not null,
+    created timestamp,
+    changed timestamp
+);
+
+alter table user_roles owner to postgres;
+
+create index if not exists user_roles_role_id_index
+    on user_roles (role_id);
+
+create index if not exists user_roles_role_id_user_id_uindex
+    on user_roles (role_id, user_id);
+
+create index if not exists user_roles_user_id_index
+    on user_roles (user_id);

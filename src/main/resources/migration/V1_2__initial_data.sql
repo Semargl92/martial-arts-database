@@ -53,7 +53,13 @@ values  (3, 'Shomen uchi', 1, 'vertical cut', null, 'ATTACK', true),
         (5, 'Shomen uchi', 7, 'vertical cut with sword', null, 'ATTACK', true),
         (1, 'Kotegaeshi', 1, 'throw with the wrist', null, 'DEFENSE', false);
 
-insert into public.security (id, role, user_id, is_deleted, created, changed)
-values  (1, 'Admin', 1, false, '2021-06-04 00:00:00.000000', '2021-06-04 00:00:00.000000'),
-        (3, 'Admin', 1, false, '2021-06-04 00:00:00.000000', '2021-06-04 00:00:00.000000'),
-        (4, 'Student', 3, false, null, '2021-06-04 00:00:00.000000');
+insert into public.roles (id, role_name)
+values  (1, 'ADMIN'),
+        (2, 'USER');
+
+insert into public.user_roles (id, role_id, user_id, is_deleted)
+values  (1, 1, 1, false),
+        (2, 2, 1, false);
+
+
+

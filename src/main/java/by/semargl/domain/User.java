@@ -33,9 +33,6 @@ public class User {
     private String surname;
 
     @Column
-    private String login;
-
-    @Column
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.NOT_SELECTED;
 
@@ -53,6 +50,13 @@ public class User {
 
     @Column(name = "birth_date")
     private LocalDateTime birthDate;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "login", column = @Column(name = "login")),
+            @AttributeOverride(name = "password", column = @Column(name = "password"))
+    })
+    private Credentials credentials;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
