@@ -1,24 +1,19 @@
 package by.semargl.controller.rest;
 
 import by.semargl.domain.Role;
-import by.semargl.domain.User;
-import by.semargl.repository.RoleRepository;
-import by.semargl.repository.UserRepository;
+import by.semargl.service.RoleService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/role")
 @RequiredArgsConstructor
 public class RoleController {
 
-    private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
+    private final RoleService roleService;
 
     @ApiOperation(value = "find all roles")
     @ApiResponses(value = {
@@ -26,7 +21,7 @@ public class RoleController {
     })
     @GetMapping("/all")
     public List<Role> findAll() {
-        return roleRepository.findAll();
+        return roleService.findAllRole();
     }
 
     @ApiOperation(value = "find one role")
@@ -40,7 +35,7 @@ public class RoleController {
     })
     @GetMapping("/{roleId}")
     public Role findOne(@PathVariable("roleId") Long id) {
-        return roleRepository.findById(id).orElseThrow();
+        return roleService.findOneRole(id);
     }
 
     @ApiOperation(value = "remove role from the database")
@@ -53,8 +48,8 @@ public class RoleController {
             @ApiResponse(code = 500, message = "There is no role with such id")
     })
     @DeleteMapping("/delete/{roleId}")
-    public void deleteRole(@PathVariable("roleId") Long id) {
-        roleRepository.deleteById(id);
+    public void delete(@PathVariable("roleId") Long id) {
+        roleService.deleteRole(id);
     }
 
     @ApiOperation(value = "create role")
@@ -62,12 +57,8 @@ public class RoleController {
             @ApiResponse(code = 200, message = "Role was successfully created")
     })
     @PostMapping("/create")
-    public Role createRole(@RequestBody String roleName) {
-        Role role = new Role();
-
-        role.setRoleName(roleName.toUpperCase(Locale.ROOT));
-
-        return roleRepository.save(role);
+    public Role create(@RequestBody String roleName) {
+        return roleService.createRole(roleName);
     }
 
     @ApiOperation(value = "update one role")
@@ -80,12 +71,8 @@ public class RoleController {
             @ApiResponse(code = 500, message = "There is no role with such id")
     })
     @PutMapping("/update/{roleId}")
-    public Role updateRole(@PathVariable("roleId") Long id, @RequestBody String rolename) {
-        Role role = roleRepository.findById(id).orElseThrow();
-
-        role.setRoleName(rolename.toUpperCase(Locale.ROOT));
-
-        return roleRepository.save(role);
+    public Role update(@PathVariable("roleId") Long id, @RequestBody String roleName) {
+        return roleService.updateRole(id, roleName);
     }
 
     @ApiOperation(value = "give the user a new role")
@@ -101,14 +88,7 @@ public class RoleController {
     })
     @PutMapping("/add_user")
     public Role addUserForRole (@RequestParam Long roleId, @RequestParam Long userId) {
-        Role role = roleRepository.findById(roleId).orElseThrow();
-        User userForAdding = userRepository.findById(userId).orElseThrow();
-
-        Set<User> users = role.getUsers();
-        users.add(userForAdding);
-        role.setUsers(users);
-
-        return roleRepository.save(role);
+        return roleService.addUserForRole(roleId, userId);
     }
 
     @ApiOperation(value = "remove user from a role")
@@ -124,13 +104,6 @@ public class RoleController {
     })
     @PutMapping("/delete_user")
     public Role deleteUserForRole (@RequestParam Long roleId, @RequestParam Long userId) {
-        Role role = roleRepository.findById(roleId).orElseThrow();
-        User userForDeleting = userRepository.findById(userId).orElseThrow();
-
-        Set<User> users = role.getUsers();
-        users.remove(userForDeleting);
-        role.setUsers(users);
-
-        return roleRepository.save(role);
+        return roleService.deleteUserForRole(roleId, userId);
     }
 }

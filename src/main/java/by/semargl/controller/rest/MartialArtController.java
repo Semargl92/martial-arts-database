@@ -1,9 +1,8 @@
 package by.semargl.controller.rest;
 
 import by.semargl.controller.requests.MartialArtRequest;
-import by.semargl.controller.requests.mappers.MartialArtMapper;
 import by.semargl.domain.MartialArt;
-import by.semargl.repository.MartialArtRepository;
+import by.semargl.service.MartialArtService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MartialArtController {
 
-    private final MartialArtRepository martialArtRepository;
-    private final MartialArtMapper martialArtMapper;
+    private final MartialArtService martialArtService;
 
     @ApiOperation(value = "find all martial arts")
     @ApiResponses(value = {
@@ -24,7 +22,7 @@ public class MartialArtController {
     })
     @GetMapping("/all")
     public List<MartialArt> findAll() {
-        return martialArtRepository.findAll();
+        return martialArtService.findAllMartialArt();
     }
 
     @ApiOperation(value = "find one martial art")
@@ -38,7 +36,7 @@ public class MartialArtController {
     })
     @GetMapping("/{martialArtId}")
     public MartialArt findOne(@PathVariable("martialArtId") Long id) {
-        return martialArtRepository.findById(id).orElseThrow();
+        return martialArtService.findOneMartialArt(id);
     }
 
     @ApiOperation(value = "remove martial art from the database")
@@ -51,8 +49,8 @@ public class MartialArtController {
             @ApiResponse(code = 500, message = "There is no martial art with such id")
     })
     @DeleteMapping("/delete/{martialArtId}")
-    public void deleteMartialArt(@PathVariable("martialArtId") Long id) {
-       martialArtRepository.deleteById(id);
+    public void delete(@PathVariable("martialArtId") Long id) {
+       martialArtService.deleteMartialArt(id);
     }
 
     @ApiOperation(value = "create one martial art")
@@ -60,12 +58,8 @@ public class MartialArtController {
             @ApiResponse(code = 200, message = "Martial art was successfully created")
     })
     @PostMapping("/create")
-    public MartialArt createMartialArt(@RequestBody MartialArtRequest martialArtRequest) {
-        MartialArt martialArt = new MartialArt();
-
-        martialArtMapper.updateMartialArtFromMartialArtRequest(martialArtRequest, martialArt);
-
-        return martialArtRepository.save(martialArt);
+    public MartialArt create(@RequestBody MartialArtRequest martialArtRequest) {
+        return martialArtService.createMartialArt(martialArtRequest);
     }
 
     @ApiOperation(value = "update one martial art")
@@ -78,11 +72,7 @@ public class MartialArtController {
             @ApiResponse(code = 500, message = "There is no martial art with such id")
     })
     @PutMapping("/update/{martialArtId}")
-    public MartialArt updateMartialArt(@PathVariable("martialArtId") Long id, @RequestBody MartialArtRequest martialArtRequest) {
-        MartialArt martialArt = martialArtRepository.findById(id).orElseThrow();
-
-        martialArtMapper.updateMartialArtFromMartialArtRequest(martialArtRequest, martialArt);
-
-        return martialArtRepository.save(martialArt);
+    public MartialArt update(@PathVariable("martialArtId") Long id, @RequestBody MartialArtRequest martialArtRequest) {
+        return martialArtService.updateMartialArt(id,martialArtRequest);
     }
 }
