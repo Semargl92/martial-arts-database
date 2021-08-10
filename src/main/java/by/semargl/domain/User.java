@@ -1,6 +1,7 @@
 package by.semargl.domain;
 
 import by.semargl.domain.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Cacheable("users")
 @EqualsAndHashCode(exclude = {
-        "students"
+        "students",  "roles"
 })
 public class User {
 
@@ -61,4 +62,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Student> students = Collections.emptySet();
+
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("users")
+    private Set<Role> roles = Collections.emptySet();
 }

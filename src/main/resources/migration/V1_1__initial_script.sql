@@ -166,10 +166,7 @@ create table if not exists user_roles
     user_id bigint not null
         constraint user_roles_users_id_fk
             references users
-            on update cascade on delete cascade,
-    is_deleted boolean not null,
-    created timestamp,
-    changed timestamp
+            on update cascade on delete cascade
 );
 
 alter table user_roles owner to postgres;

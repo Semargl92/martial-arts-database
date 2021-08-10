@@ -19,8 +19,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>, PagingAndSortingRepository<User, Long>, JpaRepository<User, Long> {
 
-    //Optional<User> findByLogin(String login);
-
     @Modifying
     @Transactional
     @Query(value = "update User u set u.isDeleted = true, u.changed = CURRENT_TIMESTAMP where u.id = :userID")
@@ -35,5 +33,4 @@ public interface UserRepository extends CrudRepository<User, Long>, PagingAndSor
     @Cacheable("users")
     @Query(value = "select u from User u where u.id < :userID")
     List<User> findByIdHQLVersion(@Param("userID") Long id);
-
 }
