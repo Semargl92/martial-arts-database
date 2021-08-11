@@ -2,20 +2,14 @@ package by.semargl.controller.rest;
 
 import by.semargl.controller.requests.UserCreateRequest;
 import by.semargl.controller.requests.UserRequest;
-import by.semargl.controller.requests.mappers.UserCreateMapper;
-import by.semargl.controller.requests.mappers.UserMapper;
 import by.semargl.domain.Credentials;
 import by.semargl.domain.User;
-import by.semargl.repository.UserRepository;
+import by.semargl.service.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-    private final UserCreateMapper userCreateMapper;
+    private final UserService userService;
 
     @ApiOperation(value = "find all users")
     @ApiResponses(value = {
@@ -33,7 +25,7 @@ public class UserController {
     })
     @GetMapping("/all/admin")
     public Page<User> findAll() {
-        return userRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
+        return userService.findAllUsers();
     }
 
     @ApiOperation(value = "find all existing users")
@@ -42,15 +34,7 @@ public class UserController {
     })
     @GetMapping("/all")
     public List<UserRequest> findAllExisting() {
-        List<User> notDeletedUsers = userRepository.findByIsDeletedFalse();
-        List<UserRequest> result = new ArrayList<>();
-        for (User user : notDeletedUsers) {
-            UserRequest request = new UserRequest();
-            userMapper.updateUserRequestFromUser(user, request);
-            request.setLogin(user.getCredentials().getLogin());
-            result.add(request);
-        }
-        return result;
+        return userService.findAllExistingUsers();
     }
 
     @ApiOperation(value = "find one user")
@@ -64,7 +48,7 @@ public class UserController {
     })
     @GetMapping("/user/admin/{userId}")
     public User findOne(@PathVariable("userId") Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userService.findOneUser(id);
     }
 
     @ApiOperation(value = "find one existing user")
@@ -78,11 +62,7 @@ public class UserController {
     })
     @GetMapping("/user/{userId}")
     public UserRequest findOneExisting(@PathVariable("userId") Long id) {
-        UserRequest request = new UserRequest();
-        User user = userRepository.findByIdAndIsDeletedFalse(id).orElseThrow();
-        userMapper.updateUserRequestFromUser(user, request);
-        request.setLogin(user.getCredentials().getLogin());
-        return request;
+        return userService.findOneExistingUser(id);
     }
 
     @ApiOperation(value = "remove user from the database")
@@ -96,7 +76,7 @@ public class UserController {
     })
     @DeleteMapping("/delete/admin/{userId}")
     public void delete(@PathVariable("userId") Long id) {
-        userRepository.deleteById(id);
+        userService.deleteUser(id);
     }
 
     @ApiOperation(value = "set user as deleted")
@@ -110,7 +90,7 @@ public class UserController {
     })
     @PutMapping("/delete/{userId}")
     public void softDelete(@PathVariable("userId") Long id) {
-        userRepository.softDelete(id);
+        userService.softDeleteUser(id);
     }
 
     @ApiOperation(value = "create one user")
@@ -119,20 +99,9 @@ public class UserController {
             @ApiResponse(code = 500, message = "User with this login already exists, please try another option")
     })
     @PostMapping("/create")
-    public UserRequest createUser(@RequestBody UserCreateRequest userCreateRequest) {
-        User user = new User();
-
-        userCreateMapper.updateUserFromUserCreateRequest(userCreateRequest, user);
-        user.setCreated(LocalDateTime.now());
-        user.setChanged(LocalDateTime.now());
-        user.setIsDeleted(false);
-
-        UserRequest request = new UserRequest();
-        user = userRepository.save(user);
-        userMapper.updateUserRequestFromUser(user, request);
-        request.setLogin(user.getCredentials().getLogin());
-
-        return request;    }
+    public UserRequest create(@RequestBody UserCreateRequest userCreateRequest) {
+        return userService.createUser(userCreateRequest);
+    }
 
     @ApiOperation(value = "update one user")
     @ApiImplicitParams({
@@ -144,23 +113,8 @@ public class UserController {
             @ApiResponse(code = 500, message = "There is no user with such id")
     })
     @PutMapping("/update/{userId}")
-    public UserRequest updateUser(@PathVariable("userId") Long id, @RequestBody UserRequest userRequest) {
-        User user = userRepository.findById(id).orElseThrow();
-
-        userMapper.updateUserFromUserRequest(userRequest, user);
-        user.setChanged(LocalDateTime.now());
-        if (userRequest.getLogin() != null ) {
-            Credentials loginUpdate = user.getCredentials();
-            loginUpdate.setLogin(userRequest.getLogin());
-            user.setCredentials(loginUpdate);
-        }
-
-        UserRequest request = new UserRequest();
-        user = userRepository.save(user);
-        userMapper.updateUserRequestFromUser(user, request);
-        request.setLogin(user.getCredentials().getLogin());
-
-        return request;
+    public UserRequest update(@PathVariable("userId") Long id, @RequestBody UserRequest userRequest) {
+        return userService.updateUser(id, userRequest);
     }
 
     @ApiOperation(value = "update credentials for user")
@@ -174,19 +128,6 @@ public class UserController {
     })
     @PutMapping("/update_credentials/{userId}")
     public Credentials updateCredentials(@PathVariable("userId") Long id, @RequestBody Credentials credentials) {
-        User user = userRepository.findById(id).orElseThrow();
-
-       Credentials forUpdate = user.getCredentials();
-        if (credentials.getLogin() != null ) {
-            forUpdate.setLogin(credentials.getLogin());
-        }
-        if (credentials.getPassword() != null ) {
-            forUpdate.setPassword(credentials.getPassword());
-        }
-        user.setCredentials(forUpdate);
-        user.setChanged(LocalDateTime.now());
-        userRepository.save(user);
-
-        return forUpdate;
+        return userService.updateCredentials(id, credentials);
     }
 }
