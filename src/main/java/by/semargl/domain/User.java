@@ -1,6 +1,24 @@
 package by.semargl.domain;
 
-import by.semargl.domain.enums.Gender;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Embedded;
+import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
@@ -8,10 +26,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Set;
+import by.semargl.domain.enums.Gender;
 
 @Entity
 @Table(name = "users")
@@ -59,7 +74,7 @@ public class User {
     })
     private Credentials credentials;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user",  orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Student> students = Collections.emptySet();
 
