@@ -5,6 +5,7 @@ import by.semargl.controller.requests.mappers.GradeMapper;
 import by.semargl.domain.Grade;
 import by.semargl.repository.GradeRepository;
 import by.semargl.repository.MartialArtRepository;
+import by.semargl.service.GradeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class GradeController {
 
-    private final GradeRepository gradeRepository;
-    private final MartialArtRepository martialArtRepository;
-    private final GradeMapper gradeMapper;
+    private final GradeService gradeService;
 
     @ApiOperation(value = "find all grades")
     @ApiResponses(value = {
@@ -27,7 +26,7 @@ public class GradeController {
     })
     @GetMapping("/all")
     public Page<Grade> findAll() {
-        return gradeRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.ASC, "id")));
+        return gradeService.findAllGrades();
     }
 
     @ApiOperation(value = "find one grade")
@@ -41,7 +40,7 @@ public class GradeController {
     })
     @GetMapping("/{gradeId}")
     public Grade findOne(@PathVariable("gradeId") Long id) {
-        return gradeRepository.findById(id).orElseThrow();
+        return gradeService.findOneGrade(id);
     }
 
     @ApiOperation(value = "remove grade from the database")
@@ -54,8 +53,8 @@ public class GradeController {
             @ApiResponse(code = 500, message = "There is no grade with such id")
     })
     @DeleteMapping("/delete/{gradeId}")
-    public void deleteGrade(@PathVariable("gradeId") Long id) {
-        gradeRepository.deleteById(id);
+    public void delete(@PathVariable("gradeId") Long id) {
+        gradeService.deleteGrade(id);
     }
 
     @ApiOperation(value = "create one grade")
@@ -63,13 +62,8 @@ public class GradeController {
             @ApiResponse(code = 200, message = "Grade was successfully created")
     })
     @PostMapping("/create")
-    public Grade createGrade(@RequestBody GradeRequest gradeRequest) {
-        Grade grade = new Grade();
-
-        gradeMapper.updateGradeFromGradeRequest(gradeRequest, grade);
-        grade.setMartialArt(martialArtRepository.findById(gradeRequest.getMartialArtId()).orElseThrow());
-
-        return gradeRepository.save(grade);
+    public Grade create(@RequestBody GradeRequest gradeRequest) {
+        return gradeService.createGrade(gradeRequest);
     }
 
     @ApiOperation(value = "update one grade")
@@ -82,14 +76,7 @@ public class GradeController {
             @ApiResponse(code = 500, message = "There is no grade with such id")
     })
     @PutMapping("/update/{gradeId}")
-    public Grade updateExercise(@PathVariable("gradeId") Long id, @RequestBody GradeRequest gradeRequest) {
-        Grade grade = gradeRepository.findById(id).orElseThrow();
-
-        gradeMapper.updateGradeFromGradeRequest(gradeRequest, grade);
-        if (gradeRequest.getMartialArtId() != null ) {
-            grade.setMartialArt(martialArtRepository.findById(gradeRequest.getMartialArtId()).orElseThrow());
-        }
-
-        return gradeRepository.save(grade);
+    public Grade update(@PathVariable("gradeId") Long id, @RequestBody GradeRequest gradeRequest) {
+        return gradeService.updateGrade(id, gradeRequest);
     }
 }

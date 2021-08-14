@@ -40,7 +40,7 @@ public class Grade {
     @JsonBackReference
     private MartialArt martialArt;
 
-    @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     private Set<Exercise> exercises = Collections.emptySet();
 

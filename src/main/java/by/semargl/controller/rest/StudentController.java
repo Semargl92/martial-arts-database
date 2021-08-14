@@ -1,17 +1,12 @@
 package by.semargl.controller.rest;
 
 import by.semargl.controller.requests.StudentRequest;
-import by.semargl.controller.requests.mappers.StudentMapper;
 import by.semargl.domain.Student;
-import by.semargl.repository.GradeRepository;
-import by.semargl.repository.StudentRepository;
-import by.semargl.repository.UserRepository;
+import by.semargl.service.StudentService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,10 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentController {
 
-    private final StudentRepository studentRepository;
-    private final UserRepository userRepository;
-    private final GradeRepository gradeRepository;
-    private final StudentMapper studentMapper;
+    private final StudentService studentService;
 
     @ApiOperation(value = "find all students")
     @ApiResponses(value = {
@@ -30,7 +22,7 @@ public class StudentController {
     })
     @GetMapping("/all/admin")
     public List<Student> findAll() {
-        return studentRepository.findAll();
+        return studentService.findAllStudents();
     }
 
     @ApiOperation(value = "find all existing students")
@@ -39,14 +31,7 @@ public class StudentController {
     })
     @GetMapping("/all")
     public List<StudentRequest> findAllExisting() {
-        List<Student> notDeletedStudents = studentRepository.findByIsDeletedFalse();
-        List<StudentRequest> result = new ArrayList<>();
-        for (Student student: notDeletedStudents) {
-            StudentRequest studentRequest = new StudentRequest();
-            studentMapper.updateStudentRequestFromStudent(student, studentRequest);
-            result.add(studentRequest);
-        }
-        return result;
+        return studentService.findAllExistingStudents();
     }
 
     @ApiOperation(value = "find one student")
@@ -60,7 +45,7 @@ public class StudentController {
     })
     @GetMapping("/admin/{studentId}")
     public Student findOne(@PathVariable("studentId") Long id) {
-        return studentRepository.findById(id).orElseThrow();
+        return studentService.findOneStudent(id);
     }
 
     @ApiOperation(value = "find one existing student")
@@ -74,10 +59,7 @@ public class StudentController {
     })
     @GetMapping("/{studentId}")
     public StudentRequest findOneExisting(@PathVariable("studentId") Long id) {
-        StudentRequest studentRequest = new StudentRequest();
-        Student student = studentRepository.findByIdAndIsDeletedFalse(id).orElseThrow();
-        studentMapper.updateStudentRequestFromStudent(student, studentRequest);
-        return studentRequest;
+        return studentService.findOneExistingStudent(id);
     }
 
     @ApiOperation(value = "remove student from the database")
@@ -90,8 +72,8 @@ public class StudentController {
             @ApiResponse(code = 500, message = "There is no student with such id")
     })
     @DeleteMapping("/delete/admin/{studentId}")
-    public void deleteStudent(@PathVariable("studentId") Long id) {
-        studentRepository.deleteById(id);
+    public void delete(@PathVariable("studentId") Long id) {
+        studentService.deleteStudent(id);
     }
 
     @ApiOperation(value = "set student as deleted")
@@ -104,8 +86,8 @@ public class StudentController {
             @ApiResponse(code = 500, message = "There is no student with such id")
     })
     @PutMapping("/delete/{studentId}")
-    public void softDeleteStudent(@PathVariable("studentId") Long id) {
-        studentRepository.softDelete(id);
+    public void softDelete(@PathVariable("studentId") Long id) {
+        studentService.softDeleteStudent(id);
     }
 
     @ApiOperation(value = "create one student")
@@ -113,17 +95,8 @@ public class StudentController {
             @ApiResponse(code = 200, message = "Student was successfully created")
     })
     @PostMapping("/create")
-    public Student createUser(@RequestBody StudentRequest studentRequest) {
-        Student student = new Student();
-
-        studentMapper.updateStudentFromStudentRequest(studentRequest, student);
-        student.setCreated(LocalDateTime.now());
-        student.setChanged(LocalDateTime.now());
-        student.setIsDeleted(false);
-        student.setUser(userRepository.findById(studentRequest.getUserId()).orElseThrow());
-        student.setGrade(gradeRepository.findById(studentRequest.getGradeId()).orElseThrow());
-
-        return studentRepository.save(student);
+    public Student create(@RequestBody StudentRequest studentRequest) {
+        return studentService.createStudent(studentRequest);
     }
 
     @ApiOperation(value = "update one student")
@@ -136,18 +109,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "There is no student with such id")
     })
     @PutMapping("/update/{studentId}")
-    public Student updateUser(@PathVariable("studentId") Long id, @RequestBody StudentRequest studentRequest) {
-        Student student = studentRepository.findById(id).orElseThrow();
-
-        studentMapper.updateStudentFromStudentRequest(studentRequest, student);
-        student.setChanged(LocalDateTime.now());
-        if (studentRequest.getUserId() != null ) {
-            student.setUser(userRepository.findById(studentRequest.getUserId()).orElseThrow());
-        }
-        if (studentRequest.getGradeId() != null ) {
-            student.setGrade(gradeRepository.findById(studentRequest.getGradeId()).orElseThrow());
-        }
-
-        return studentRepository.save(student);
+    public Student update(@PathVariable("studentId") Long id, @RequestBody StudentRequest studentRequest) {
+        return studentService.updateStudent(id, studentRequest);
     }
 }

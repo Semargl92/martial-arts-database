@@ -33,7 +33,7 @@ public class Exercise {
     @Column(name = "is_weapon_technik")
     private Boolean isWeaponTechnik;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "grade_id")
     @JsonBackReference
     private Grade grade;

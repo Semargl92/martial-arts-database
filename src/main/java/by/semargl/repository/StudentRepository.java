@@ -8,7 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +16,12 @@ import java.util.Optional;
 public interface StudentRepository extends CrudRepository<Student, Long>, PagingAndSortingRepository<Student, Long>, JpaRepository<Student, Long> {
 
     @Modifying
-    @Transactional
     @Query(value = "update Student s set s.isDeleted = true, s.changed = CURRENT_TIMESTAMP where s.id = :studentID")
     void softDelete (@Param("studentID") Long id);
+
+    @Modifying
+    @Query(value = "delete from Student s where s.id = :studentID")
+    void delete(@Param("studentID") Long id);
 
     List<Student> findByIsDeletedFalse();
 
