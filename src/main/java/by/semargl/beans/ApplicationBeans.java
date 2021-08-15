@@ -1,16 +1,21 @@
 package by.semargl.beans;
 
-import by.semargl.controller.requests.mappers.*;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import org.mapstruct.factory.Mappers;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.mapstruct.factory.Mappers;
 
-
-import java.util.concurrent.TimeUnit;
+import by.semargl.controller.requests.mappers.ExerciseMapper;
+import by.semargl.controller.requests.mappers.GradeMapper;
+import by.semargl.controller.requests.mappers.MartialArtMapper;
+import by.semargl.controller.requests.mappers.StudentMapper;
+import by.semargl.controller.requests.mappers.UserCreateMapper;
+import by.semargl.controller.requests.mappers.UserMapper;
 
 @Configuration
 @EnableCaching

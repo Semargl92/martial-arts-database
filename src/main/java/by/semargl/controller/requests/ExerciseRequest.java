@@ -1,10 +1,11 @@
 package by.semargl.controller.requests;
 
-import by.semargl.domain.enums.ExerciseType;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import by.semargl.domain.enums.ExerciseType;
 
 @ApiOperation("Class for creating and updating exercise entity")
 @Data

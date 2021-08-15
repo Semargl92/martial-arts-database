@@ -1,5 +1,13 @@
 package by.semargl.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import by.semargl.controller.requests.StudentRequest;
 import by.semargl.controller.requests.mappers.StudentMapper;
 import by.semargl.domain.Student;
@@ -7,13 +15,6 @@ import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.GradeRepository;
 import by.semargl.repository.StudentRepository;
 import by.semargl.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -1,12 +1,13 @@
 package by.semargl.controller.requests;
 
-import by.semargl.domain.enums.MartialArtType;
+import java.time.LocalDateTime;
+
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import by.semargl.domain.enums.MartialArtType;
 
 @ApiOperation("Class for creating and updating martial art entity")
 @Data

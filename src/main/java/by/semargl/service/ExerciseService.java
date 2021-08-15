@@ -1,16 +1,17 @@
 package by.semargl.service;
 
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import by.semargl.controller.requests.ExerciseRequest;
 import by.semargl.controller.requests.mappers.ExerciseMapper;
 import by.semargl.domain.Exercise;
 import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.ExerciseRepository;
 import by.semargl.repository.GradeRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

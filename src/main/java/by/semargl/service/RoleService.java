@@ -1,16 +1,17 @@
 package by.semargl.service;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import by.semargl.domain.Role;
 import by.semargl.domain.User;
 import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.RoleRepository;
 import by.semargl.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

@@ -1,13 +1,9 @@
 package by.semargl.service;
 
-import by.semargl.controller.requests.UserCreateRequest;
-import by.semargl.controller.requests.UserRequest;
-import by.semargl.controller.requests.mappers.UserCreateMapper;
-import by.semargl.controller.requests.mappers.UserMapper;
-import by.semargl.domain.Credentials;
-import by.semargl.domain.User;
-import by.semargl.exception.NoSuchEntityException;
-import by.semargl.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -16,9 +12,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import by.semargl.controller.requests.UserCreateRequest;
+import by.semargl.controller.requests.UserRequest;
+import by.semargl.controller.requests.mappers.UserCreateMapper;
+import by.semargl.controller.requests.mappers.UserMapper;
+import by.semargl.domain.Credentials;
+import by.semargl.domain.User;
+import by.semargl.exception.NoSuchEntityException;
+import by.semargl.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor

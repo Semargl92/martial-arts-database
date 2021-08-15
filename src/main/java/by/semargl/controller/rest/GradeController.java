@@ -1,17 +1,24 @@
 package by.semargl.controller.rest;
 
-import by.semargl.controller.requests.GradeRequest;
-import by.semargl.controller.requests.mappers.GradeMapper;
-import by.semargl.domain.Grade;
-import by.semargl.repository.GradeRepository;
-import by.semargl.repository.MartialArtRepository;
-import by.semargl.service.GradeService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.*;
+
+import by.semargl.controller.requests.GradeRequest;
+import by.semargl.domain.Grade;
+import by.semargl.service.GradeService;
 
 @RestController
 @RequestMapping("/grade")

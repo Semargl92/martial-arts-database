@@ -1,14 +1,13 @@
 package by.semargl.util;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import by.semargl.domain.User;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import by.semargl.domain.User;
 
 @Service
 public class UserGenerator {
