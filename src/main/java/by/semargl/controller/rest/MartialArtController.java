@@ -32,7 +32,7 @@ public class MartialArtController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial arts were successfully found")
     })
-    @GetMapping("/all")
+    @GetMapping
     public List<MartialArt> findAll() {
         return martialArtService.findAllMartialArt();
     }
@@ -60,7 +60,7 @@ public class MartialArtController {
             @ApiResponse(code = 200, message = "Martial art was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no martial art with such id")
     })
-    @DeleteMapping("/delete/{martialArtId}")
+    @DeleteMapping("/{martialArtId}")
     public void delete(@PathVariable("martialArtId") Long id) {
        martialArtService.deleteMartialArt(id);
     }
@@ -69,7 +69,7 @@ public class MartialArtController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial art was successfully created")
     })
-    @PostMapping("/create")
+    @PostMapping
     public MartialArt create(@RequestBody MartialArtRequest martialArtRequest) {
         return martialArtService.createMartialArt(martialArtRequest);
     }
@@ -83,7 +83,7 @@ public class MartialArtController {
             @ApiResponse(code = 200, message = "Martial art was successfully updated"),
             @ApiResponse(code = 500, message = "There is no martial art with such id")
     })
-    @PutMapping("/update/{martialArtId}")
+    @PutMapping("/{martialArtId}")
     public MartialArt update(@PathVariable("martialArtId") Long id, @RequestBody MartialArtRequest martialArtRequest) {
         return martialArtService.updateMartialArt(id,martialArtRequest);
     }

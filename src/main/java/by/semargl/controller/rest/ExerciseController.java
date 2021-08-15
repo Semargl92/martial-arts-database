@@ -32,7 +32,7 @@ public class ExerciseController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercises were successfully found")
     })
-    @GetMapping("/all")
+    @GetMapping
     public List<Exercise> findAll() {
         return exerciseService.findAllExercise();
     }
@@ -60,7 +60,7 @@ public class ExerciseController {
             @ApiResponse(code = 200, message = "Exercise was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no exercise with such id")
     })
-    @DeleteMapping("/delete/{exerciseId}")
+    @DeleteMapping("/{exerciseId}")
     public void delete(@PathVariable("exerciseId") Long id) {
         exerciseService.deleteExercise(id);
     }
@@ -69,7 +69,7 @@ public class ExerciseController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercise was successfully created")
     })
-    @PostMapping("/create")
+    @PostMapping
     public Exercise create(@RequestBody ExerciseRequest exerciseRequest) {
         return exerciseService.createExercise(exerciseRequest);
     }
@@ -83,7 +83,7 @@ public class ExerciseController {
             @ApiResponse(code = 200, message = "Exercise was successfully updated"),
             @ApiResponse(code = 500, message = "There is no exercise with such id")
     })
-    @PutMapping("/update/{exerciseId}")
+    @PutMapping("/{exerciseId}")
     public Exercise update(@PathVariable("exerciseId") Long id, @RequestBody ExerciseRequest exerciseRequest) {
         return exerciseService.updateExercise(id, exerciseRequest);
     }

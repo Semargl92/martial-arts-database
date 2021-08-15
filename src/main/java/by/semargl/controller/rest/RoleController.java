@@ -32,7 +32,7 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Roles were successfully found")
     })
-    @GetMapping("/all")
+    @GetMapping
     public List<Role> findAll() {
         return roleService.findAllRole();
     }
@@ -60,7 +60,7 @@ public class RoleController {
             @ApiResponse(code = 200, message = "Role was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no role with such id")
     })
-    @DeleteMapping("/delete/{roleId}")
+    @DeleteMapping("/{roleId}")
     public void delete(@PathVariable("roleId") Long id) {
         roleService.deleteRole(id);
     }
@@ -69,7 +69,7 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Role was successfully created")
     })
-    @PostMapping("/create")
+    @PostMapping
     public Role create(@RequestBody String roleName) {
         return roleService.createRole(roleName);
     }
@@ -83,7 +83,7 @@ public class RoleController {
             @ApiResponse(code = 200, message = "Role was successfully updated"),
             @ApiResponse(code = 500, message = "There is no role with such id")
     })
-    @PutMapping("/update/{roleId}")
+    @PutMapping("/{roleId}")
     public Role update(@PathVariable("roleId") Long id, @RequestBody String roleName) {
         return roleService.updateRole(id, roleName);
     }

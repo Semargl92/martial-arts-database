@@ -32,7 +32,7 @@ public class StudentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Students were successfully found")
     })
-    @GetMapping("/all/admin")
+    @GetMapping("/admin")
     public List<Student> findAll() {
         return studentService.findAllStudents();
     }
@@ -41,7 +41,7 @@ public class StudentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Students were successfully found")
     })
-    @GetMapping("/all")
+    @GetMapping
     public List<StudentRequest> findAllExisting() {
         return studentService.findAllExistingStudents();
     }
@@ -83,7 +83,7 @@ public class StudentController {
             @ApiResponse(code = 200, message = "Student was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no student with such id")
     })
-    @DeleteMapping("/delete/admin/{studentId}")
+    @DeleteMapping("/admin/{studentId}")
     public void delete(@PathVariable("studentId") Long id) {
         studentService.deleteStudent(id);
     }
@@ -106,7 +106,7 @@ public class StudentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student was successfully created")
     })
-    @PostMapping("/create")
+    @PostMapping
     public Student create(@RequestBody StudentRequest studentRequest) {
         return studentService.createStudent(studentRequest);
     }
@@ -120,7 +120,7 @@ public class StudentController {
             @ApiResponse(code = 200, message = "Student was successfully updated"),
             @ApiResponse(code = 500, message = "There is no student with such id")
     })
-    @PutMapping("/update/{studentId}")
+    @PutMapping("/{studentId}")
     public Student update(@PathVariable("studentId") Long id, @RequestBody StudentRequest studentRequest) {
         return studentService.updateStudent(id, studentRequest);
     }

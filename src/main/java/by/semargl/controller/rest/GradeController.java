@@ -31,7 +31,7 @@ public class GradeController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grades were successfully found")
     })
-    @GetMapping("/all")
+    @GetMapping
     public Page<Grade> findAll() {
         return gradeService.findAllGrades();
     }
@@ -59,7 +59,7 @@ public class GradeController {
             @ApiResponse(code = 200, message = "Grade was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no grade with such id")
     })
-    @DeleteMapping("/delete/{gradeId}")
+    @DeleteMapping("/{gradeId}")
     public void delete(@PathVariable("gradeId") Long id) {
         gradeService.deleteGrade(id);
     }
@@ -68,7 +68,7 @@ public class GradeController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grade was successfully created")
     })
-    @PostMapping("/create")
+    @PostMapping
     public Grade create(@RequestBody GradeRequest gradeRequest) {
         return gradeService.createGrade(gradeRequest);
     }
@@ -82,7 +82,7 @@ public class GradeController {
             @ApiResponse(code = 200, message = "Grade was successfully updated"),
             @ApiResponse(code = 500, message = "There is no grade with such id")
     })
-    @PutMapping("/update/{gradeId}")
+    @PutMapping("/{gradeId}")
     public Grade update(@PathVariable("gradeId") Long id, @RequestBody GradeRequest gradeRequest) {
         return gradeService.updateGrade(id, gradeRequest);
     }
