@@ -19,6 +19,7 @@ import by.semargl.controller.requests.mappers.UserMapper;
 import by.semargl.domain.Credentials;
 import by.semargl.domain.User;
 import by.semargl.exception.NoSuchEntityException;
+import by.semargl.repository.StudentRepository;
 import by.semargl.repository.UserRepository;
 
 @Service
@@ -26,6 +27,7 @@ import by.semargl.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
     private final UserMapper userMapper;
     private final UserCreateMapper userCreateMapper;
 
@@ -63,6 +65,13 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteUserWithOrphans(Long id) {
+        User user = findOneUser(id);
+        studentRepository.deleteWithUser(user);
+        userRepository.delete(user);
     }
 
     @Transactional

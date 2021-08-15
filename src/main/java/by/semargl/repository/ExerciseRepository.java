@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import by.semargl.domain.Exercise;
+import by.semargl.domain.Grade;
 
 @Repository
 public interface ExerciseRepository extends CrudRepository<Exercise, Long>, PagingAndSortingRepository<Exercise, Long>, JpaRepository<Exercise, Long>{
@@ -16,4 +17,8 @@ public interface ExerciseRepository extends CrudRepository<Exercise, Long>, Pagi
     @Modifying
     @Query(value = "delete from Exercise e where e.id = :exerciseID")
     void delete(@Param("exerciseID") Long id);
+
+    @Modifying
+    @Query(value = "delete from Exercise e where e.grade = :grade")
+    void deleteWithGrade(@Param("grade") Grade grade);
 }

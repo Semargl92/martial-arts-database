@@ -92,6 +92,21 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+
+    @ApiOperation(value = "remove user with orphans")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
+                    value = "id of user for deleting from database", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully deleted"),
+            @ApiResponse(code = 500, message = "There is no user with such id")
+    })
+    @DeleteMapping("delete_with_students/admin/{userId}")
+    public void deleteWithOrphans(@PathVariable("userId") Long id) {
+        userService.deleteUserWithOrphans(id);
+    }
+
     @ApiOperation(value = "set user as deleted")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",

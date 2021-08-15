@@ -64,6 +64,20 @@ public class GradeController {
         gradeService.deleteGrade(id);
     }
 
+    @ApiOperation(value = "remove grade with orphans")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
+                    value = "id of grade for deleting from database", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Grade was successfully deleted"),
+            @ApiResponse(code = 500, message = "There is no grade with such id")
+    })
+    @DeleteMapping("delete_with_orphans/{gradeId}")
+    public void deleteWitOrphans(@PathVariable("gradeId") Long id) {
+        gradeService.deleteGradeWithOrphans(id);
+    }
+
     @ApiOperation(value = "create one grade")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grade was successfully created")

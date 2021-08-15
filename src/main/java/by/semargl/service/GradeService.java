@@ -11,14 +11,18 @@ import by.semargl.controller.requests.GradeRequest;
 import by.semargl.controller.requests.mappers.GradeMapper;
 import by.semargl.domain.Grade;
 import by.semargl.exception.NoSuchEntityException;
+import by.semargl.repository.ExerciseRepository;
 import by.semargl.repository.GradeRepository;
 import by.semargl.repository.MartialArtRepository;
+import by.semargl.repository.StudentRepository;
 
 @Service
 @RequiredArgsConstructor
 public class GradeService {
 
     private final GradeRepository gradeRepository;
+    private final ExerciseRepository exerciseRepository;
+    private final StudentRepository studentRepository;
     private final MartialArtRepository martialArtRepository;
     private final GradeMapper gradeMapper;
 
@@ -34,6 +38,14 @@ public class GradeService {
     @Transactional
     public void deleteGrade(Long id) {
         gradeRepository.delete(id);
+    }
+
+    @Transactional
+    public void deleteGradeWithOrphans(Long id) {
+        Grade grade = findOneGrade(id);
+        studentRepository.deleteWithGrade(grade);
+        exerciseRepository.deleteWithGrade(grade);
+        deleteGrade(id);
     }
 
     public Grade createGrade(GradeRequest gradeRequest) {
