@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 
@@ -157,5 +158,35 @@ public class UserController {
     @PatchMapping("/update_credentials/{userId}")
     public Credentials updateCredentials(@PathVariable("userId") Long id, @RequestBody Credentials credentials) {
         return userService.updateCredentials(id, credentials);
+    }
+
+    @ApiOperation(value = "find users with name")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", dataType = "string", paramType = "query",
+                    value = "name for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Users were successfully found"),
+            @ApiResponse(code = 500, message = "There are no users with similar name")
+    })
+    @GetMapping("/name")
+    public List<UserRequest> findByName(@RequestParam String name) {
+       return userService.findUserByName(name);
+    }
+
+    @ApiOperation(value = "find users with name and surname")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", dataType = "string", paramType = "query",
+                    value = "name for search", required = true),
+            @ApiImplicitParam(name = "surname", dataType = "string", paramType = "query",
+                    value = "surname for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Users were successfully found"),
+            @ApiResponse(code = 500, message = "There are no users with similar name and surname")
+    })
+    @GetMapping("/name_and_surname")
+    public List<UserRequest> findByNameAndSurname(@RequestParam String name, @RequestParam String surname) {
+        return userService.findUserByNameAndSurname(name, surname);
     }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import by.semargl.controller.requests.StudentRequest;
@@ -14,7 +15,6 @@ import by.semargl.domain.Grade;
 import by.semargl.domain.Student;
 import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.GradeRepository;
-import by.semargl.repository.MartialArtRepository;
 import by.semargl.repository.StudentRepository;
 import by.semargl.repository.UserRepository;
 
@@ -22,7 +22,6 @@ import by.semargl.repository.UserRepository;
 @RequiredArgsConstructor
 public class StudentService {
 
-    private final MartialArtRepository martialArtRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GradeRepository gradeRepository;
@@ -129,5 +128,12 @@ public class StudentService {
             throw new NoSuchEntityException("There is no students for this grade id");
         }
         return students;
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public void updateStudentsGrade(Long studentId, Long gradeId) {
+        Grade grade = gradeRepository.findById(gradeId).
+                orElseThrow(() -> new NoSuchEntityException("There is no such grade"));
+        studentRepository.updateStudentsGrade(studentId, grade);
     }
 }

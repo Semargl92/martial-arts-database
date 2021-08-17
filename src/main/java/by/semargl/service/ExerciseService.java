@@ -81,4 +81,12 @@ public class ExerciseService {
         }
         return exercises;
     }
+
+    public List<Exercise> findExerciseByName(String exerciseName){
+        List<Exercise> exercises = exerciseRepository.findByNameContainingIgnoreCase(exerciseName);
+        if (exercises.isEmpty()) {
+            throw new NoSuchEntityException("There is no exercises with such name");
+        }
+        return exercises;
+    }
 }

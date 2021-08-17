@@ -1,6 +1,5 @@
 package by.semargl.repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +19,8 @@ import by.semargl.domain.User;
 public interface StudentRepository extends CrudRepository<Student, Long>, PagingAndSortingRepository<Student, Long>, JpaRepository<Student, Long> {
 
     @Modifying
-    @Query(value = "update Student s set s.isDeleted = true, s.changed = CURRENT_TIMESTAMP where s.id = :studentID")
-    void softDelete (@Param("studentID") Long id);
+    @Query(value = "update Student s set s.isDeleted = true, s.changed = CURRENT_TIMESTAMP where s.id = :studentId")
+    void softDelete(@Param("studentId") Long id);
 
     @Modifying
     @Query(value = "delete from Student s where s.id = :studentID")
@@ -34,6 +33,10 @@ public interface StudentRepository extends CrudRepository<Student, Long>, Paging
     @Modifying
     @Query(value = "delete from Student s where s.user = :user")
     void deleteWithUser(@Param("user")User user);
+
+    @Modifying
+    @Query(value = "update Student s set s.grade = :grade, s.changed = CURRENT_TIMESTAMP where s.id = :studentId")
+    void updateStudentsGrade(@Param("studentId") Long studentId, @Param("grade") Grade grade);
 
     List<Student> findByIsDeletedFalse();
 

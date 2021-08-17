@@ -38,14 +38,7 @@ public class UserService {
     @Cacheable("users")
     public List<UserRequest> findAllExistingUsers() {
         List<User> notDeletedUsers = userRepository.findByIsDeletedFalse();
-        List<UserRequest> result = new ArrayList<>();
-        for (User user : notDeletedUsers) {
-            UserRequest request = new UserRequest();
-            userMapper.updateUserRequestFromUser(user, request);
-            request.setLogin(user.getCredentials().getLogin());
-            result.add(request);
-        }
-        return result;
+        return wrapUsersListWithUserRequest(notDeletedUsers);
     }
 
     public User findOneUser(Long id) {
@@ -131,5 +124,32 @@ public class UserService {
         userRepository.save(user);
 
         return forUpdate;
+    }
+
+    public List<UserRequest> findUserByName(String name) {
+        List<User> users = userRepository.findByNameContainingIgnoreCase(name);
+        if (users.isEmpty()) {
+            throw new NoSuchEntityException("There is no users with similar names");
+        }
+        return wrapUsersListWithUserRequest(users);
+    }
+
+    public List<UserRequest> findUserByNameAndSurname(String name, String surname) {
+        List<User> users = userRepository.findByNameContainingIgnoreCaseOrSurnameContainingIgnoreCase(name, surname);
+        if (users.isEmpty()) {
+            throw new NoSuchEntityException("There is no users with similar names and surnames");
+        }
+        return wrapUsersListWithUserRequest(users);
+    }
+
+    private List<UserRequest> wrapUsersListWithUserRequest (List<User> users) {
+        List<UserRequest> result = new ArrayList<>();
+        for (User user : users) {
+            UserRequest request = new UserRequest();
+            userMapper.updateUserRequestFromUser(user, request);
+            request.setLogin(user.getCredentials().getLogin());
+            result.add(request);
+        }
+        return result;
     }
 }

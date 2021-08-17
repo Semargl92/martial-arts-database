@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import by.semargl.controller.requests.ExerciseRequest;
@@ -114,5 +115,19 @@ public class ExerciseController {
     @GetMapping("all_for_martial_art/{martialArtId}")
     public List<Exercise> findAllForMartialArt(@PathVariable("martialArtId") Long id) {
         return exerciseService.findAllWithMartialArtId(id);
+    }
+
+    @ApiOperation(value = "find exercises by name")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "exerciseName", dataType = "string", paramType = "query",
+                    value = "name of exercise for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Exercises were successfully found"),
+            @ApiResponse(code = 500, message = "There is no exercises with such name")
+    })
+    @GetMapping("/name")
+    public List<Exercise> findExercisesByName(@RequestParam String exerciseName) {
+        return exerciseService.findExerciseByName(exerciseName);
     }
 }

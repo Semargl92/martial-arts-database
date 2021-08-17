@@ -27,4 +27,6 @@ public interface ExerciseRepository extends CrudRepository<Exercise, Long>, Pagi
     List<Exercise> findByGradeId(Long id);
 
     List<Exercise> findByGradeIsIn(List<Grade> grade);
+
+    List<Exercise> findByNameContainingIgnoreCase(String exerciseName);
 }
