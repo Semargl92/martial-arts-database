@@ -1,5 +1,7 @@
 package by.semargl.service;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import by.semargl.controller.requests.GradeRequest;
 import by.semargl.controller.requests.mappers.GradeMapper;
 import by.semargl.domain.Grade;
+import by.semargl.domain.MartialArt;
 import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.ExerciseRepository;
 import by.semargl.repository.GradeRepository;
@@ -69,5 +72,19 @@ public class GradeService {
         }
 
         return gradeRepository.save(grade);
+    }
+
+    public List<Grade> findAllGradesByMartialArtId(Long id) {
+        List<Grade> grades = gradeRepository.findByMartialArtId(id);
+        if (grades.isEmpty()) {
+            throw new NoSuchEntityException("There is no grades for this martial art id");
+        }
+        return grades;
+    }
+
+    public List<Grade> findAllGradesByMartialArtName(String martialArtName) {
+        MartialArt martialArt = martialArtRepository.findByName(martialArtName)
+                .orElseThrow(() -> new NoSuchEntityException("There is no martial art with such name"));
+        return findAllGradesByMartialArtId(martialArt.getId());
     }
 }

@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.semargl.controller.requests.StudentRequest;
 import by.semargl.controller.requests.mappers.StudentMapper;
+import by.semargl.domain.Grade;
 import by.semargl.domain.Student;
 import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.GradeRepository;
+import by.semargl.repository.MartialArtRepository;
 import by.semargl.repository.StudentRepository;
 import by.semargl.repository.UserRepository;
 
@@ -20,6 +22,7 @@ import by.semargl.repository.UserRepository;
 @RequiredArgsConstructor
 public class StudentService {
 
+    private final MartialArtRepository martialArtRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GradeRepository gradeRepository;
@@ -106,5 +109,25 @@ public class StudentService {
         }
 
         return studentRepository.save(student);
+    }
+
+    public List<Student> findAllStudentsForMartialArt(Long id) {
+        List<Grade> allGrades = gradeRepository.findByMartialArtId(id);
+        if (allGrades.isEmpty()) {
+            throw new NoSuchEntityException("There is no grades for this martial art id");
+        }
+        List<Student> students = studentRepository.findByGradeIsIn(allGrades);
+        if (students.isEmpty()) {
+            throw new NoSuchEntityException("There is no students for this martial art id");
+        }
+        return students;
+    }
+
+    public List<Student> findAllStudentsForGrade(Long id) {
+        List<Student> students = studentRepository.findByGradeId(id);
+        if (students.isEmpty()) {
+            throw new NoSuchEntityException("There is no students for this grade id");
+        }
+        return students;
     }
 }

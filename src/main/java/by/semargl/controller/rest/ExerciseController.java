@@ -87,4 +87,32 @@ public class ExerciseController {
     public Exercise update(@PathVariable("exerciseId") Long id, @RequestBody ExerciseRequest exerciseRequest) {
         return exerciseService.updateExercise(id, exerciseRequest);
     }
+
+    @ApiOperation(value = "find all exercises for grade")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
+                    value = "id of grade for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Exercises were successfully found"),
+            @ApiResponse(code = 500, message = "There is no exercises for such grade id")
+    })
+    @GetMapping("all_for_grade/{gradeId}")
+    public List<Exercise> findAllForGrade(@PathVariable("gradeId") Long id) {
+        return exerciseService.findAllWithGradeId(id);
+    }
+
+    @ApiOperation(value = "find all exercises for martial art")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
+                    value = "id of martial art for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Exercises were successfully found"),
+            @ApiResponse(code = 500, message = "There is no exercises for such martial art id")
+    })
+    @GetMapping("all_for_martial_art/{martialArtId}")
+    public List<Exercise> findAllForMartialArt(@PathVariable("martialArtId") Long id) {
+        return exerciseService.findAllWithMartialArtId(id);
+    }
 }

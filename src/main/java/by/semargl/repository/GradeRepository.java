@@ -1,5 +1,7 @@
 package by.semargl.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,6 @@ public interface GradeRepository extends CrudRepository<Grade, Long>, PagingAndS
     @Modifying
     @Query(value = "delete from Grade g where g.id = :gradeID")
     void delete(@Param("gradeID") Long id);
+
+    List<Grade> findByMartialArtId(Long id);
 }

@@ -124,4 +124,32 @@ public class StudentController {
     public Student update(@PathVariable("studentId") Long id, @RequestBody StudentRequest studentRequest) {
         return studentService.updateStudent(id, studentRequest);
     }
+
+    @ApiOperation(value = "find all students for martial art")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
+                    value = "id of martial art for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Students were successfully found"),
+            @ApiResponse(code = 500, message = "There are no students for such id")
+    })
+    @GetMapping("for_martial_art/admin/{martialArtId}")
+    public List<Student> findAllStudentsForMartialArt(@PathVariable("martialArtId") Long id) {
+        return studentService.findAllStudentsForMartialArt(id);
+    }
+
+    @ApiOperation(value = "find all students for grade")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
+                    value = "id of grade for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Students were successfully found"),
+            @ApiResponse(code = 500, message = "There are no students for such id")
+    })
+    @GetMapping("for_grade/admin/{gradeId}")
+    public List<Student> findAllStudentsForGrade(@PathVariable("gradeId") Long id) {
+        return studentService.findAllStudentsForGrade(id);
+    }
 }

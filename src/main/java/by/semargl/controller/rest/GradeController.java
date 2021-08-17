@@ -1,5 +1,7 @@
 package by.semargl.controller.rest;
 
+import java.util.List;
+
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -99,5 +101,31 @@ public class GradeController {
     @PutMapping("/{gradeId}")
     public Grade update(@PathVariable("gradeId") Long id, @RequestBody GradeRequest gradeRequest) {
         return gradeService.updateGrade(id, gradeRequest);
+    }
+
+    @ApiOperation(value = "find all grades by martial art id")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
+                    value = "id of martial art for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Grades were successfully found")
+    })
+    @GetMapping("all_for_id/{martialArtId}")
+    public List<Grade> findAllGradesForMartialArtId(@PathVariable("martialArtId") Long id) {
+        return gradeService.findAllGradesByMartialArtId(id);
+    }
+
+    @ApiOperation(value = "find all grades by martial art name")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "martialArtName", dataType = "string", paramType = "path",
+                    value = "name of martial art for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Grades were successfully found")
+    })
+    @GetMapping("all_for_name/{martialArtName}")
+    public List<Grade> findAllGradesForMartialArtName(@PathVariable("martialArtName") String martialArtName) {
+        return gradeService.findAllGradesByMartialArtName(martialArtName);
     }
 }

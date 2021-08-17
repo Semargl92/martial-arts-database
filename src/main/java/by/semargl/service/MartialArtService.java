@@ -48,4 +48,12 @@ public class MartialArtService {
 
         return martialArtRepository.save(martialArt);
     }
+
+    public List<MartialArt> findMartialArtsByOrigin(String countryOfOrigin) {
+        List<MartialArt> martialArts = martialArtRepository.findByOrigin(countryOfOrigin);
+        if (martialArts.isEmpty()) {
+            throw new NoSuchEntityException("There are no martial arts for this country");
+        }
+        return martialArts;
+    }
 }

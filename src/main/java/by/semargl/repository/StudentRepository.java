@@ -1,5 +1,6 @@
 package by.semargl.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,4 +38,8 @@ public interface StudentRepository extends CrudRepository<Student, Long>, Paging
     List<Student> findByIsDeletedFalse();
 
     Optional<Student> findByIdAndIsDeletedFalse(Long id);
+
+    List<Student> findByGradeIsIn(List<Grade> grade);
+
+    List<Student> findByGradeId(Long id);
 }

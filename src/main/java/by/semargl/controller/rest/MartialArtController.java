@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import by.semargl.controller.requests.MartialArtRequest;
@@ -86,5 +87,19 @@ public class MartialArtController {
     @PutMapping("/{martialArtId}")
     public MartialArt update(@PathVariable("martialArtId") Long id, @RequestBody MartialArtRequest martialArtRequest) {
         return martialArtService.updateMartialArt(id,martialArtRequest);
+    }
+
+    @ApiOperation(value = "find martial arts by country")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "countryName", dataType = "string", paramType = "query",
+                    value = "name of country of martial art for search", required = true)
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Martial arts were successfully found"),
+            @ApiResponse(code = 500, message = "There is no martial art with such origin")
+    })
+    @GetMapping("/origin")
+    public List<MartialArt> findByCountry(@RequestParam String countryName) {
+        return martialArtService.findMartialArtsByOrigin(countryName);
     }
 }
