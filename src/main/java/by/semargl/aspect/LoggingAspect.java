@@ -14,28 +14,33 @@ public class LoggingAspect {
 
     private static final Logger log = Logger.getLogger(LoggingAspect.class);
 
-//    @Before("aroundRepositoryPointcut()")
-//    public void logBefore(JoinPoint joinPoint) {
-//        log.info("Method " + joinPoint.getSignature().getName() + " start");
-//    }
-//
-//    @AfterReturning(pointcut = "aroundRepositoryPointcut()")
-//    public void doAccessCheck(JoinPoint joinPoint) {
-//        log.info("Method " + joinPoint.getSignature().getName() + " finished");
-//    }
-
-    @Pointcut("execution(* by.semargl.repository.UserRepository.*(..))")
-    public void aroundRepositoryPointcut() {
+    @Pointcut("@within(org.springframework.stereotype.Service)")
+    public void aroundServicePointcut() {
     }
 
-    @Around("aroundRepositoryPointcut()")
-    public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("Method " + joinPoint.getSignature().getName() + " start");
+    @Around("aroundServicePointcut()")
+    public Object logServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info("Service: Method " + joinPoint.getSignature().getName() + " start");
         StopWatch timer = new StopWatch();
         timer.start();
         Object proceed = joinPoint.proceed();
         timer.stop();
-        log.info("Method " + joinPoint.getSignature().getName() + " finished with time " + timer.getTotalTimeMillis() + " ms");
+        log.info("Service: Method " + joinPoint.getSignature().getName() + " finished with time " + timer.getTotalTimeMillis() + " ms");
+        return proceed;
+    }
+
+    @Pointcut("@within(org.springframework.stereotype.Repository)")
+    public void aroundRepositoryPointcut() {
+    }
+
+    @Around("aroundRepositoryPointcut()")
+    public Object logRepositoryMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info("Repository: Method " + joinPoint.getSignature().getName() + " start");
+        StopWatch timer = new StopWatch();
+        timer.start();
+        Object proceed = joinPoint.proceed();
+        timer.stop();
+        log.info("Repository: Method " + joinPoint.getSignature().getName() + " finished with time " + timer.getTotalTimeMillis() + " ms");
         return proceed;
     }
 }
