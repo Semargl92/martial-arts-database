@@ -17,7 +17,7 @@ public class DefaultExceptionHandler {
     public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
         /* Handles all other exceptions. Status code 500. */
         log.warn(e.getMessage(), e);
-        return new ResponseEntity<>(new ErrorMessage(2L, e.getMessage()),
+        return new ResponseEntity<>(new ErrorMessage(1L, e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
