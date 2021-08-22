@@ -109,7 +109,7 @@ public class StudentController {
             @ApiResponse(code = 200, message = "Student was successfully created")
     })
     @PostMapping
-    public Student create(@RequestBody StudentRequest studentRequest) {
+    public StudentRequest create(@RequestBody StudentRequest studentRequest) {
         return studentService.createStudent(studentRequest);
     }
 
@@ -123,7 +123,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "There is no student with such id")
     })
     @PutMapping("/{studentId}")
-    public Student update(@PathVariable("studentId") Long id, @RequestBody StudentRequest studentRequest) {
+    public StudentRequest update(@PathVariable("studentId") Long id, @RequestBody StudentRequest studentRequest) {
         return studentService.updateStudent(id, studentRequest);
     }
 

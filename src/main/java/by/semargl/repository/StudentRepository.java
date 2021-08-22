@@ -20,7 +20,7 @@ public interface StudentRepository extends CrudRepository<Student, Long>, Paging
 
     @Modifying
     @Query(value = "update Student s set s.isDeleted = true, s.changed = CURRENT_TIMESTAMP where s.id = :studentId")
-    void softDelete(@Param("studentId") Long id);
+    void softDeleteStudent(@Param("studentId") Long id);
 
     @Modifying
     @Query(value = "delete from Student s where s.id = :studentID")
