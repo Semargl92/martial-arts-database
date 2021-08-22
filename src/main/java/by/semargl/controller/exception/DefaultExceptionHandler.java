@@ -13,8 +13,8 @@ public class DefaultExceptionHandler {
 
     private static final Logger log = Logger.getLogger(LoggingAspect.class);
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ErrorMessage> handleOthersException(Throwable e) {
         /* Handles all other exceptions. Status code 500. */
         log.warn(e.getMessage(), e);
         return new ResponseEntity<>(new ErrorMessage(1L, e.getMessage()),

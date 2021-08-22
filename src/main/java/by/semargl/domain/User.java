@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 
 import by.semargl.domain.enums.Gender;
 
@@ -32,7 +31,6 @@ import by.semargl.domain.enums.Gender;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@Cacheable("users")
 @EqualsAndHashCode(exclude = {
         "students",  "roles"
 })

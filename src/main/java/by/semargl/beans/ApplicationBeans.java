@@ -23,7 +23,7 @@ public class ApplicationBeans {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("users");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("users", "grades", "exercises", "students");
         cacheManager.setCaffeine(cacheProperties());
         return cacheManager;
     }
