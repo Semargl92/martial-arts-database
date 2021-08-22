@@ -1,11 +1,15 @@
 package by.semargl.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import by.semargl.domain.Role;
 import by.semargl.domain.User;
@@ -29,6 +33,7 @@ public class RoleService {
                 .orElseThrow(() -> new NoSuchEntityException("Role not found by id " + id));
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public void deleteRole(Long id) {
         roleRepository.deleteById(id);
     }
@@ -41,6 +46,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public Role updateRole(Long id, String roleName) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Role not found by id " + id));
@@ -50,6 +56,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public Role addUserForRole (Long roleId, Long userId) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new NoSuchEntityException("Role not found by id " + roleId));
@@ -63,6 +70,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public Role deleteUserForRole (Long roleId, Long userId) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new NoSuchEntityException("Role not found by id " + roleId));

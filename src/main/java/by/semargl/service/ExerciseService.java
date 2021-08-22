@@ -1,10 +1,13 @@
 package by.semargl.service;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import by.semargl.controller.requests.ExerciseRequest;
@@ -23,16 +26,18 @@ public class ExerciseService {
     private final GradeRepository gradeRepository;
     private final ExerciseMapper exerciseMapper;
 
+    @Cacheable("exercises")
     public List<Exercise> findAllExercise() {
         return exerciseRepository.findAll();
     }
 
+    @Cacheable("exercises")
     public Exercise findOneExercise(Long id) {
         return exerciseRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Exercise not found by id " + id));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public void deleteExercise(Long id) {
         exerciseRepository.delete(id);
     }
@@ -47,6 +52,7 @@ public class ExerciseService {
         return exerciseRepository.save(exercise);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public Exercise updateExercise(Long id, ExerciseRequest exerciseRequest) {
         Exercise exercise = exerciseRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Exercise not found by id " + id));
@@ -60,6 +66,7 @@ public class ExerciseService {
         return exerciseRepository.save(exercise);
     }
 
+    @Cacheable("grades")
     public List<Exercise> findAllWithGradeId(Long id) {
         List <Exercise> exercises = exerciseRepository.findByGradeId(id);
         if (exercises.isEmpty()) {
@@ -68,6 +75,7 @@ public class ExerciseService {
         return exercises;
     }
 
+    @Cacheable("exercises")
     public List<Exercise> findAllWithMartialArtId(Long id) {
         List<Grade> allGrades = gradeRepository.findByMartialArtId(id);
         if (allGrades.isEmpty()) {
@@ -82,6 +90,7 @@ public class ExerciseService {
         return exercises;
     }
 
+    @Cacheable("exercises")
     public List<Exercise> findExerciseByName(String exerciseName){
         List<Exercise> exercises = exerciseRepository.findByNameContainingIgnoreCase(exerciseName);
         if (exercises.isEmpty()) {

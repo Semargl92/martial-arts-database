@@ -1,18 +1,22 @@
 package by.semargl.service;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import by.semargl.controller.requests.StudentRequest;
 import by.semargl.controller.requests.mappers.StudentMapper;
 import by.semargl.domain.Grade;
 import by.semargl.domain.Student;
+import by.semargl.domain.User;
 import by.semargl.exception.NoSuchEntityException;
 import by.semargl.repository.GradeRepository;
 import by.semargl.repository.StudentRepository;
@@ -31,6 +35,7 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    @Cacheable("students")
     public List<StudentRequest> findAllExistingStudents() {
         List<Student> notDeletedStudents = studentRepository.findByIsDeletedFalse();
         List<StudentRequest> result = new ArrayList<>();
@@ -53,6 +58,7 @@ public class StudentService {
                 .orElseThrow(() -> new NoSuchEntityException("Student not found by id " + id));
     }
 
+    @Cacheable("students")
     public StudentRequest findOneExistingStudent(Long id) {
         StudentRequest studentRequest = new StudentRequest();
         Student student = studentRepository.findByIdAndIsDeletedFalse(id)
@@ -67,49 +73,67 @@ public class StudentService {
         return studentRequest;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public void deleteStudent(Long id) {
         studentRepository.delete(id);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public void softDeleteStudent(Long id) {
-        studentRepository.softDelete(id);
+        studentRepository.softDeleteStudent(id);
     }
 
-    public Student createStudent(StudentRequest studentRequest) {
+    public StudentRequest createStudent(StudentRequest studentRequest) {
         Student student = new Student();
 
         studentMapper.updateStudentFromStudentRequest(studentRequest, student);
         student.setCreated(LocalDateTime.now());
         student.setChanged(LocalDateTime.now());
         student.setIsDeleted(false);
-        student.setUser(userRepository.findById(studentRequest.getUserId())
-                .orElseThrow(() -> new NoSuchEntityException("There is no such user for this student")));
         student.setGrade(gradeRepository.findById(studentRequest.getGradeId())
                 .orElseThrow(() -> new NoSuchEntityException("There is no such grade for this student")));
 
-        return studentRepository.save(student);
+        User user = userRepository.findById(studentRequest.getUserId())
+                .orElseThrow(() -> new NoSuchEntityException("There is no such user for this student"));
+
+        if (user.getIsDeleted()) {
+            throw new NoSuchEntityException("There is no such user for this student");
+        }
+        student.setUser(user);
+
+        studentRepository.save(student);
+
+        return studentRequest;
     }
 
-    public Student updateStudent(Long id, StudentRequest studentRequest) {
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
+    public StudentRequest updateStudent(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Student not found by id " + id));
 
         studentMapper.updateStudentFromStudentRequest(studentRequest, student);
         student.setChanged(LocalDateTime.now());
         if (studentRequest.getUserId() != null ) {
-            student.setUser(userRepository.findById(studentRequest.getUserId())
-                    .orElseThrow(() -> new NoSuchEntityException("There is no such user for this student")));
+            User user = userRepository.findById(studentRequest.getUserId())
+                    .orElseThrow(() -> new NoSuchEntityException("There is no such user for this student"));
+
+            if (user.getIsDeleted()) {
+                throw new NoSuchEntityException("There is no such user for this student");
+            }
+            student.setUser(user);
         }
         if (studentRequest.getGradeId() != null ) {
             student.setGrade(gradeRepository.findById(studentRequest.getGradeId())
                     .orElseThrow(() -> new NoSuchEntityException("There is no such grade for this student")));
         }
 
-        return studentRepository.save(student);
+        student = studentRepository.save(student);
+        studentMapper.updateStudentRequestFromStudent(student, studentRequest);
+
+        return studentRequest;
     }
 
+    @Cacheable("students")
     public List<Student> findAllStudentsForMartialArt(Long id) {
         List<Grade> allGrades = gradeRepository.findByMartialArtId(id);
         if (allGrades.isEmpty()) {
@@ -122,6 +146,7 @@ public class StudentService {
         return students;
     }
 
+    @Cacheable("grades")
     public List<Student> findAllStudentsForGrade(Long id) {
         List<Student> students = studentRepository.findByGradeId(id);
         if (students.isEmpty()) {
@@ -130,7 +155,7 @@ public class StudentService {
         return students;
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = SQLException.class)
     public void updateStudentsGrade(Long studentId, Long gradeId) {
         Grade grade = gradeRepository.findById(gradeId).
                 orElseThrow(() -> new NoSuchEntityException("There is no such grade"));

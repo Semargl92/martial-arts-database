@@ -1,12 +1,16 @@
 package by.semargl.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import by.semargl.controller.requests.GradeRequest;
@@ -29,21 +33,23 @@ public class GradeService {
     private final MartialArtRepository martialArtRepository;
     private final GradeMapper gradeMapper;
 
+    @Cacheable("grades")
     public Page<Grade> findAllGrades() {
         return gradeRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.ASC, "id")));
     }
 
+    @Cacheable("grades")
     public Grade findOneGrade(Long id) {
         return gradeRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Grade not found by id " + id));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public void deleteGrade(Long id) {
         gradeRepository.delete(id);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public void deleteGradeWithOrphans(Long id) {
         Grade grade = findOneGrade(id);
         studentRepository.deleteWithGrade(grade);
@@ -61,6 +67,7 @@ public class GradeService {
         return gradeRepository.save(grade);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public Grade updateGrade(Long id, GradeRequest gradeRequest) {
         Grade grade = gradeRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Grade not found by id " + id));
@@ -74,6 +81,7 @@ public class GradeService {
         return gradeRepository.save(grade);
     }
 
+    @Cacheable("grades")
     public List<Grade> findAllGradesByMartialArtId(Long id) {
         List<Grade> grades = gradeRepository.findByMartialArtId(id);
         if (grades.isEmpty()) {
@@ -82,6 +90,7 @@ public class GradeService {
         return grades;
     }
 
+    @Cacheable("grades")
     public List<Grade> findAllGradesByMartialArtName(String martialArtName) {
         MartialArt martialArt = martialArtRepository.findByName(martialArtName)
                 .orElseThrow(() -> new NoSuchEntityException("There is no martial art with such name"));
