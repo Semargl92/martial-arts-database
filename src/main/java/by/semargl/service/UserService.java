@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.SecondaryTable;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -42,7 +40,7 @@ public class UserService {
         return userRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.DESC, "id")));
     }
 
-    @Cacheable("users")
+    @Cacheable(value = "users", key = "#root.methodName")
     public List<UserRequest> findAllExistingUsers() {
         List<User> notDeletedUsers = userRepository.findByIsDeletedFalse();
         return wrapUsersListWithUserRequest(notDeletedUsers);
@@ -53,7 +51,7 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchEntityException("User not found by id " + id));
     }
 
-    @Cacheable("users")
+    @Cacheable(value = "users", key = "{ #root.methodName, #id }")
     public UserRequest findOneExistingUser(Long id) {
         UserRequest request = new UserRequest();
         User user = userRepository.findByIdAndIsDeletedFalse(id)
@@ -143,7 +141,7 @@ public class UserService {
         return forUpdate;
     }
 
-    @Cacheable("users")
+    @Cacheable(value = "users", key = "{ #root.methodName, #name }")
     public List<UserRequest> findUserByName(String name) {
         List<User> users = userRepository.findByNameContainingIgnoreCase(name);
         users.removeIf(User::getIsDeleted);
@@ -153,7 +151,7 @@ public class UserService {
         return wrapUsersListWithUserRequest(users);
     }
 
-    @Cacheable("users")
+    @Cacheable(value = "users", key = "{ #root.methodName, #name, #surname }")
     public List<UserRequest> findUserByNameAndSurname(String name, String surname) {
         List<User> users = userRepository.findByNameContainingIgnoreCaseOrSurnameContainingIgnoreCase(name, surname);
         users.removeIf(User::getIsDeleted);
@@ -161,6 +159,14 @@ public class UserService {
             throw new NoSuchEntityException("There is no users with similar names and surnames");
         }
         return wrapUsersListWithUserRequest(users);
+    }
+
+    public User findByLoginAndPassword(String login, String password) {
+        Credentials credentials = new Credentials();
+        credentials. setLogin(login);
+        credentials.setPassword(password);
+        return userRepository.findByCredentials(credentials)
+                .orElseThrow(() -> new NoSuchEntityException("There is no user with such credentials"));
     }
 
     private List<UserRequest> wrapUsersListWithUserRequest (List<User> users) {

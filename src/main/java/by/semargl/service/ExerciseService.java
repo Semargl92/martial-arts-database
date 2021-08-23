@@ -26,12 +26,12 @@ public class ExerciseService {
     private final GradeRepository gradeRepository;
     private final ExerciseMapper exerciseMapper;
 
-    @Cacheable("exercises")
+    @Cacheable(value = "exercises", key = "#root.methodName")
     public List<Exercise> findAllExercise() {
         return exerciseRepository.findAll();
     }
 
-    @Cacheable("exercises")
+    @Cacheable(value = "exercises", key = "{ #root.methodName, #id }")
     public Exercise findOneExercise(Long id) {
         return exerciseRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Exercise not found by id " + id));
@@ -66,7 +66,7 @@ public class ExerciseService {
         return exerciseRepository.save(exercise);
     }
 
-    @Cacheable("grades")
+    @Cacheable(value = "exercises", key = "{ #root.methodName, #id }")
     public List<Exercise> findAllWithGradeId(Long id) {
         List <Exercise> exercises = exerciseRepository.findByGradeId(id);
         if (exercises.isEmpty()) {
@@ -75,7 +75,7 @@ public class ExerciseService {
         return exercises;
     }
 
-    @Cacheable("exercises")
+    @Cacheable(value = "exercises", key = "{ #root.methodName, #id }")
     public List<Exercise> findAllWithMartialArtId(Long id) {
         List<Grade> allGrades = gradeRepository.findByMartialArtId(id);
         if (allGrades.isEmpty()) {
@@ -90,7 +90,7 @@ public class ExerciseService {
         return exercises;
     }
 
-    @Cacheable("exercises")
+    @Cacheable(value = "exercises", key = "{ #root.methodName, #exerciseName }")
     public List<Exercise> findExerciseByName(String exerciseName){
         List<Exercise> exercises = exerciseRepository.findByNameContainingIgnoreCase(exerciseName);
         if (exercises.isEmpty()) {

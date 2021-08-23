@@ -35,7 +35,7 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    @Cacheable("students")
+    @Cacheable(value = "students", key = "#root.methodName")
     public List<StudentRequest> findAllExistingStudents() {
         List<Student> notDeletedStudents = studentRepository.findByIsDeletedFalse();
         List<StudentRequest> result = new ArrayList<>();
@@ -58,7 +58,7 @@ public class StudentService {
                 .orElseThrow(() -> new NoSuchEntityException("Student not found by id " + id));
     }
 
-    @Cacheable("students")
+    @Cacheable(value = "students", key = "{ #root.methodName, #id }")
     public StudentRequest findOneExistingStudent(Long id) {
         StudentRequest studentRequest = new StudentRequest();
         Student student = studentRepository.findByIdAndIsDeletedFalse(id)
@@ -133,7 +133,7 @@ public class StudentService {
         return studentRequest;
     }
 
-    @Cacheable("students")
+    @Cacheable(value = "students", key = "{ #root.methodName, #id }")
     public List<Student> findAllStudentsForMartialArt(Long id) {
         List<Grade> allGrades = gradeRepository.findByMartialArtId(id);
         if (allGrades.isEmpty()) {
@@ -146,7 +146,7 @@ public class StudentService {
         return students;
     }
 
-    @Cacheable("grades")
+    @Cacheable(value = "students", key = "{ #root.methodName, #id }")
     public List<Student> findAllStudentsForGrade(Long id) {
         List<Student> students = studentRepository.findByGradeId(id);
         if (students.isEmpty()) {

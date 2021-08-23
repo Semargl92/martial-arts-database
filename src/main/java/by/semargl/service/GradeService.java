@@ -33,12 +33,12 @@ public class GradeService {
     private final MartialArtRepository martialArtRepository;
     private final GradeMapper gradeMapper;
 
-    @Cacheable("grades")
+    @Cacheable(value = "grades", key = "#root.methodName")
     public Page<Grade> findAllGrades() {
         return gradeRepository.findAll(PageRequest.of(1, 10, Sort.by(Sort.Direction.ASC, "id")));
     }
 
-    @Cacheable("grades")
+    @Cacheable(value = "grades", key = "{ #root.methodName, #id }")
     public Grade findOneGrade(Long id) {
         return gradeRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException("Grade not found by id " + id));
@@ -81,7 +81,7 @@ public class GradeService {
         return gradeRepository.save(grade);
     }
 
-    @Cacheable("grades")
+    @Cacheable(value = "grades", key = "{ #root.methodName, #id }")
     public List<Grade> findAllGradesByMartialArtId(Long id) {
         List<Grade> grades = gradeRepository.findByMartialArtId(id);
         if (grades.isEmpty()) {
@@ -90,7 +90,7 @@ public class GradeService {
         return grades;
     }
 
-    @Cacheable("grades")
+    @Cacheable(value = "grades", key = "{ #root.methodName, #martialArtName }")
     public List<Grade> findAllGradesByMartialArtName(String martialArtName) {
         MartialArt martialArt = martialArtRepository.findByName(martialArtName)
                 .orElseThrow(() -> new NoSuchEntityException("There is no martial art with such name"));
