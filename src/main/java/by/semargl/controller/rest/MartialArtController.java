@@ -30,6 +30,10 @@ public class MartialArtController {
     private final MartialArtService martialArtService;
 
     @ApiOperation(value = "find all martial arts")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial arts were successfully found")
     })
@@ -41,7 +45,9 @@ public class MartialArtController {
     @ApiOperation(value = "find one martial art")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
-                    value = "id of martial art for search", required = true)
+                    value = "id of martial art for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial art was successfully found"),
@@ -55,22 +61,28 @@ public class MartialArtController {
     @ApiOperation(value = "remove martial art from the database")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
-                    value = "id of martial art for deleting from database", required = true)
+                    value = "id of martial art for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial art was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no martial art with such id")
     })
-    @DeleteMapping("/{martialArtId}")
+    @DeleteMapping("/admin/{martialArtId}")
     public void delete(@PathVariable("martialArtId") Long id) {
        martialArtService.deleteMartialArt(id);
     }
 
     @ApiOperation(value = "create one martial art")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial art was successfully created")
     })
-    @PostMapping
+    @PostMapping("/admin")
     public MartialArt create(@RequestBody MartialArtRequest martialArtRequest) {
         return martialArtService.createMartialArt(martialArtRequest);
     }
@@ -78,13 +90,15 @@ public class MartialArtController {
     @ApiOperation(value = "update one martial art")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
-                    value = "id of martial art for update", required = true)
+                    value = "id of martial art for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial art was successfully updated"),
             @ApiResponse(code = 500, message = "There is no martial art with such id")
     })
-    @PutMapping("/{martialArtId}")
+    @PutMapping("/admin/{martialArtId}")
     public MartialArt update(@PathVariable("martialArtId") Long id, @RequestBody MartialArtRequest martialArtRequest) {
         return martialArtService.updateMartialArt(id,martialArtRequest);
     }
@@ -92,7 +106,9 @@ public class MartialArtController {
     @ApiOperation(value = "find martial arts by country")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "countryName", dataType = "string", paramType = "query",
-                    value = "name of country of martial art for search", required = true)
+                    value = "name of country of martial art for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Martial arts were successfully found"),

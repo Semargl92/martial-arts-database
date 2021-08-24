@@ -31,6 +31,10 @@ public class StudentController {
     private final StudentService studentService;
 
     @ApiOperation(value = "find all students")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Students were successfully found")
     })
@@ -40,6 +44,10 @@ public class StudentController {
     }
 
     @ApiOperation(value = "find all existing students")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Students were successfully found")
     })
@@ -51,7 +59,9 @@ public class StudentController {
     @ApiOperation(value = "find one student")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "studentId", dataType = "string", paramType = "path",
-                    value = "id of student for search", required = true)
+                    value = "id of student for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student was successfully found"),
@@ -65,7 +75,9 @@ public class StudentController {
     @ApiOperation(value = "find one existing student")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "studentId", dataType = "string", paramType = "path",
-                    value = "id of student for search", required = true)
+                    value = "id of student for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student was successfully found"),
@@ -79,7 +91,9 @@ public class StudentController {
     @ApiOperation(value = "remove student from the database")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "studentId", dataType = "string", paramType = "path",
-                    value = "id of student for deleting from database", required = true)
+                    value = "id of student for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student was successfully deleted"),
@@ -93,7 +107,9 @@ public class StudentController {
     @ApiOperation(value = "set student as deleted")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "studentId", dataType = "string", paramType = "path",
-                    value = "id of student for soft delete", required = true)
+                    value = "id of student for soft delete", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student was successfully deleted"),
@@ -105,6 +121,10 @@ public class StudentController {
     }
 
     @ApiOperation(value = "create one student")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student was successfully created")
     })
@@ -116,7 +136,9 @@ public class StudentController {
     @ApiOperation(value = "update one student")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "studentId", dataType = "string", paramType = "path",
-                    value = "id of student for update", required = true)
+                    value = "id of student for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student was successfully updated"),
@@ -130,13 +152,15 @@ public class StudentController {
     @ApiOperation(value = "find all students for martial art")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
-                    value = "id of martial art for search", required = true)
+                    value = "id of martial art for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Students were successfully found"),
             @ApiResponse(code = 500, message = "There are no students for such id")
     })
-    @GetMapping("for_martial_art/admin/{martialArtId}")
+    @GetMapping("/admin/for_martial_art/{martialArtId}")
     public List<Student> findAllStudentsForMartialArt(@PathVariable("martialArtId") Long id) {
         return studentService.findAllStudentsForMartialArt(id);
     }
@@ -144,13 +168,15 @@ public class StudentController {
     @ApiOperation(value = "find all students for grade")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
-                    value = "id of grade for search", required = true)
+                    value = "id of grade for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Students were successfully found"),
             @ApiResponse(code = 500, message = "There are no students for such id")
     })
-    @GetMapping("for_grade/admin/{gradeId}")
+    @GetMapping("/admin/for_grade/{gradeId}")
     public List<Student> findAllStudentsForGrade(@PathVariable("gradeId") Long id) {
         return studentService.findAllStudentsForGrade(id);
     }
@@ -160,13 +186,15 @@ public class StudentController {
             @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "query",
                     value = "id of grade for update", required = true),
             @ApiImplicitParam(name = "studentsId", dataType = "string", paramType = "query",
-                    value = "id of student for update", required = true)
+                    value = "id of student for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Student's grade was successfully updated"),
             @ApiResponse(code = 500, message = "There are no students or grades for such id")
     })
-    @PatchMapping("update_grade/admin")
+    @PatchMapping("/admin/update_grade")
     public Student updateStudentsGrade(@RequestParam Long studentsId, @RequestParam Long gradeId) {
         studentService.updateStudentsGrade(studentsId, gradeId);
         return studentService.findOneStudent(studentsId);

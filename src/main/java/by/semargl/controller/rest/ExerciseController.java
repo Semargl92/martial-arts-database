@@ -30,6 +30,10 @@ public class ExerciseController {
     private final ExerciseService exerciseService;
 
     @ApiOperation(value = "find all exercises")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercises were successfully found")
     })
@@ -41,7 +45,9 @@ public class ExerciseController {
     @ApiOperation(value = "find one exercise")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exerciseId", dataType = "string", paramType = "path",
-                    value = "id of exercise for search", required = true)
+                    value = "id of exercise for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercise was successfully found"),
@@ -55,22 +61,28 @@ public class ExerciseController {
     @ApiOperation(value = "remove exercise from the database")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exerciseId", dataType = "string", paramType = "path",
-                    value = "id of exercise for deleting from database", required = true)
+                    value = "id of exercise for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercise was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no exercise with such id")
     })
-    @DeleteMapping("/{exerciseId}")
+    @DeleteMapping("/admin/{exerciseId}")
     public void delete(@PathVariable("exerciseId") Long id) {
         exerciseService.deleteExercise(id);
     }
 
     @ApiOperation(value = "create one exercise")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercise was successfully created")
     })
-    @PostMapping
+    @PostMapping("/admin")
     public Exercise create(@RequestBody ExerciseRequest exerciseRequest) {
         return exerciseService.createExercise(exerciseRequest);
     }
@@ -78,13 +90,15 @@ public class ExerciseController {
     @ApiOperation(value = "update one exercise")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exerciseId", dataType = "string", paramType = "path",
-                    value = "id of exercise for update", required = true)
+                    value = "id of exercise for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercise was successfully updated"),
             @ApiResponse(code = 500, message = "There is no exercise with such id")
     })
-    @PutMapping("/{exerciseId}")
+    @PutMapping("/admin/{exerciseId}")
     public Exercise update(@PathVariable("exerciseId") Long id, @RequestBody ExerciseRequest exerciseRequest) {
         return exerciseService.updateExercise(id, exerciseRequest);
     }
@@ -92,7 +106,9 @@ public class ExerciseController {
     @ApiOperation(value = "find all exercises for grade")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
-                    value = "id of grade for search", required = true)
+                    value = "id of grade for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercises were successfully found"),
@@ -106,7 +122,9 @@ public class ExerciseController {
     @ApiOperation(value = "find all exercises for martial art")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
-                    value = "id of martial art for search", required = true)
+                    value = "id of martial art for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercises were successfully found"),
@@ -120,7 +138,9 @@ public class ExerciseController {
     @ApiOperation(value = "find exercises by name")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exerciseName", dataType = "string", paramType = "query",
-                    value = "name of exercise for search", required = true)
+                    value = "name of exercise for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exercises were successfully found"),

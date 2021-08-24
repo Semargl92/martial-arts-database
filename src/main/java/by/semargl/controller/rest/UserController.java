@@ -117,7 +117,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "User was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no user with such id")
     })
-    @DeleteMapping("delete_with_students/admin/{userId}")
+    @DeleteMapping("/admin/delete_with_students/{userId}")
     public void deleteWithOrphans(@PathVariable("userId") Long id) {
         userService.deleteUserWithOrphans(id);
     }
@@ -139,15 +139,11 @@ public class UserController {
     }
 
     @ApiOperation(value = "create one user")
-    /*@ApiImplicitParams({
-            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
-                    dataType = "string", paramType = "header")
-    })*/
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully created"),
             @ApiResponse(code = 500, message = "User with this login already exists, please try another option")
     })
-    @PostMapping
+    @PostMapping("/create")
     public UserRequest create(@RequestBody UserCreateRequest userCreateRequest) {
         return userService.createUser(userCreateRequest);
     }

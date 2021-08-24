@@ -29,6 +29,10 @@ public class RoleController {
     private final RoleService roleService;
 
     @ApiOperation(value = "find all roles")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Roles were successfully found")
     })
@@ -40,7 +44,9 @@ public class RoleController {
     @ApiOperation(value = "find one role")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", dataType = "string", paramType = "path",
-                    value = "id of role for search", required = true)
+                    value = "id of role for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Role was successfully found"),
@@ -54,7 +60,9 @@ public class RoleController {
     @ApiOperation(value = "remove role from the database")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", dataType = "string", paramType = "path",
-                    value = "id of role for deleting from database", required = true)
+                    value = "id of role for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Role was successfully deleted"),
@@ -66,6 +74,10 @@ public class RoleController {
     }
 
     @ApiOperation(value = "create role")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Role was successfully created")
     })
@@ -77,7 +89,9 @@ public class RoleController {
     @ApiOperation(value = "update one role")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", dataType = "string", paramType = "path",
-                    value = "id of role for update", required = true)
+                    value = "id of role for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Role was successfully updated"),
@@ -93,7 +107,9 @@ public class RoleController {
             @ApiImplicitParam(name = "roleId", dataType = "string", paramType = "query",
                     value = "id of role for user adding", required = true),
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "query",
-                    value = "id of user for new role", required = true)
+                    value = "id of user for new role", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User got a new role"),
@@ -109,7 +125,9 @@ public class RoleController {
             @ApiImplicitParam(name = "roleId", dataType = "string", paramType = "query",
                     value = "id of role for user deleting", required = true),
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "query",
-                    value = "id of user for exclusion from the list", required = true)
+                    value = "id of user for exclusion from the list", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was excluded"),

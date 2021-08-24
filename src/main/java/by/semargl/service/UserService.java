@@ -33,6 +33,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
+    private final RoleService roleService;
     private final UserMapper userMapper;
     private final UserCreateMapper userCreateMapper;
 
@@ -85,6 +86,7 @@ public class UserService {
         userRepository.softDeleteUser(id);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = SQLException.class)
     public UserRequest createUser(UserCreateRequest userCreateRequest) {
         User user = new User();
 
@@ -92,9 +94,11 @@ public class UserService {
         user.setCreated(LocalDateTime.now());
         user.setChanged(LocalDateTime.now());
         user.setIsDeleted(false);
+        user = userRepository.save(user);
+
+        roleService.addUserForRole(2L, user.getId());
 
         UserRequest request = new UserRequest();
-        user = userRepository.save(user);
         userMapper.updateUserRequestFromUser(user, request);
         request.setLogin(user.getCredentials().getLogin());
 

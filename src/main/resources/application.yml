@@ -23,4 +23,4 @@ server:
 
 jwtconfig:
   secret: secret
-  expiration: 600000
+  expiration: 6000000

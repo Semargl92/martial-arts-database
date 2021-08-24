@@ -68,9 +68,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/users/**").permitAll()
                 .antMatchers("/authentication/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/users/create").permitAll()
+                .antMatchers("/users/admin/**").hasRole("ADMIN")
+                .antMatchers("/users/**").hasAnyRole("USER", "ADMIN", "TEACHER")
+                .antMatchers("/student/admin/**").hasAnyRole("ADMIN", "TEACHER")
+                .antMatchers("/student/**").hasAnyRole("USER", "ADMIN", "TEACHER")
+                .antMatchers("/role/**").hasRole("ADMIN")
+                .antMatchers("/martial_art/admin/**").hasRole("ADMIN")
+                .antMatchers("/martial_art/**").hasAnyRole("USER", "ADMIN", "TEACHER")
+                .antMatchers("/grade/admin/**").hasAnyRole("ADMIN", "TEACHER")
+                .antMatchers("/grade/**").hasAnyRole("USER", "ADMIN", "TEACHER")
+                .antMatchers("/exercise/admin/**").hasAnyRole("ADMIN", "TEACHER")
+                .antMatchers("/exercise/**").hasAnyRole("USER", "ADMIN", "TEACHER")
+
                 .anyRequest().authenticated();
 
         // Custom JWT based authentication

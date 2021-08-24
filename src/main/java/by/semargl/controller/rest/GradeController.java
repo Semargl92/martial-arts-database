@@ -30,6 +30,10 @@ public class GradeController {
     private final GradeService gradeService;
 
     @ApiOperation(value = "find all grades")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grades were successfully found")
     })
@@ -41,7 +45,9 @@ public class GradeController {
     @ApiOperation(value = "find one grade")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
-                    value = "id of grade for search", required = true)
+                    value = "id of grade for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grade was successfully found"),
@@ -55,13 +61,15 @@ public class GradeController {
     @ApiOperation(value = "remove grade from the database")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
-                    value = "id of grade for deleting from database", required = true)
+                    value = "id of grade for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grade was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no grade with such id")
     })
-    @DeleteMapping("/{gradeId}")
+    @DeleteMapping("/admin/{gradeId}")
     public void delete(@PathVariable("gradeId") Long id) {
         gradeService.deleteGrade(id);
     }
@@ -69,22 +77,28 @@ public class GradeController {
     @ApiOperation(value = "remove grade with orphans")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
-                    value = "id of grade for deleting from database", required = true)
+                    value = "id of grade for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grade was successfully deleted"),
             @ApiResponse(code = 500, message = "There is no grade with such id")
     })
-    @DeleteMapping("delete_with_orphans/{gradeId}")
+    @DeleteMapping("/admin/delete_with_orphans/{gradeId}")
     public void deleteWitOrphans(@PathVariable("gradeId") Long id) {
         gradeService.deleteGradeWithOrphans(id);
     }
 
     @ApiOperation(value = "create one grade")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grade was successfully created")
     })
-    @PostMapping
+    @PostMapping("/admin")
     public Grade create(@RequestBody GradeRequest gradeRequest) {
         return gradeService.createGrade(gradeRequest);
     }
@@ -92,13 +106,15 @@ public class GradeController {
     @ApiOperation(value = "update one grade")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "gradeId", dataType = "string", paramType = "path",
-                    value = "id of grade for update", required = true)
+                    value = "id of grade for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grade was successfully updated"),
             @ApiResponse(code = 500, message = "There is no grade with such id")
     })
-    @PutMapping("/{gradeId}")
+    @PutMapping("/admin/{gradeId}")
     public Grade update(@PathVariable("gradeId") Long id, @RequestBody GradeRequest gradeRequest) {
         return gradeService.updateGrade(id, gradeRequest);
     }
@@ -106,7 +122,9 @@ public class GradeController {
     @ApiOperation(value = "find all grades by martial art id")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "martialArtId", dataType = "string", paramType = "path",
-                    value = "id of martial art for search", required = true)
+                    value = "id of martial art for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grades were successfully found")
@@ -119,7 +137,9 @@ public class GradeController {
     @ApiOperation(value = "find all grades by martial art name")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "martialArtName", dataType = "string", paramType = "path",
-                    value = "name of martial art for search", required = true)
+                    value = "name of martial art for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Grades were successfully found")
