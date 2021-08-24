@@ -7,6 +7,9 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -38,5 +41,12 @@ public class CustomExceptionHandlers {
         log.warn(e.getMessage(), e);
         return new ResponseEntity<>(new ErrorMessage(4L, e.getMessage()),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorMessage> handleUsernameNotFoundException(AuthenticationException e) {
+        log.warn(e.getMessage(), e);
+        return new ResponseEntity<>(new ErrorMessage(5L, e.getMessage()),
+                HttpStatus.NOT_FOUND);
     }
 }

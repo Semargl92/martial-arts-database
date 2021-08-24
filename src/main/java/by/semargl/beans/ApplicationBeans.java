@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.mapstruct.factory.Mappers;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import by.semargl.controller.requests.mappers.ExerciseMapper;
 import by.semargl.controller.requests.mappers.GradeMapper;
@@ -35,6 +36,11 @@ public class ApplicationBeans {
                 .expireAfterAccess(200, TimeUnit.SECONDS)
                 .weakKeys()
                 .recordStats();
+    }
+
+    @Bean
+    public NoOpPasswordEncoder noOpPasswordEncoder() {
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
 
     @Bean

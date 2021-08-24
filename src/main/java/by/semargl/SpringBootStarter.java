@@ -12,6 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import by.semargl.beans.ApplicationBeans;
 import by.semargl.beans.PersistenceBeanConfiguration;
 import by.semargl.beans.SwaggerConfig;
+import by.semargl.security.configuration.WebSecurityConfiguration;
 
 @SpringBootApplication(scanBasePackages = "by.semargl")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
@@ -21,7 +22,8 @@ import by.semargl.beans.SwaggerConfig;
 @EnableTransactionManagement
 @Import({ApplicationBeans.class,
         PersistenceBeanConfiguration.class,
-        SwaggerConfig.class})
+        SwaggerConfig.class,
+        WebSecurityConfiguration.class})
 public class SpringBootStarter {
 
     public static void main(String[] args) {

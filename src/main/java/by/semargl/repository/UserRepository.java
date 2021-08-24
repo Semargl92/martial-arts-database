@@ -21,6 +21,9 @@ public interface UserRepository extends CrudRepository<User, Long>, PagingAndSor
     @Query(value = "update User u set u.isDeleted = true, u.changed = CURRENT_TIMESTAMP where u.id = :userID")
     void softDeleteUser (@Param("userID") Long id);
 
+    @Query(value = "select * from users where login = :login", nativeQuery = true)
+    Optional<User> findByLogin(@Param("login") String login);
+
     Optional<User> findByCredentials(Credentials credentials);
 
     List<User> findByIsDeletedFalse();

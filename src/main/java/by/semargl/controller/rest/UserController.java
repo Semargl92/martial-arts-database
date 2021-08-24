@@ -34,6 +34,9 @@ public class UserController {
     private final UserService userService;
 
     @ApiOperation(value = "find all users")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Users were successfully found")
     })
@@ -43,6 +46,9 @@ public class UserController {
     }
 
     @ApiOperation(value = "find all existing users")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true, dataType = "string", paramType = "header")
+    })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Users were successfully found")
     })
@@ -54,7 +60,9 @@ public class UserController {
     @ApiOperation(value = "find one user")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
-                    value = "id of user for search", required = true)
+                    value = "id of user for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully found"),
@@ -68,7 +76,9 @@ public class UserController {
     @ApiOperation(value = "find one existing user")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
-                    value = "id of user for search", required = true)
+                    value = "id of user for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully found"),
@@ -82,7 +92,9 @@ public class UserController {
     @ApiOperation(value = "remove user from the database")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
-                    value = "id of user for deleting from database", required = true)
+                    value = "id of user for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully deleted"),
@@ -97,7 +109,9 @@ public class UserController {
     @ApiOperation(value = "remove user with orphans")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
-                    value = "id of user for deleting from database", required = true)
+                    value = "id of user for deleting from database", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully deleted"),
@@ -111,7 +125,9 @@ public class UserController {
     @ApiOperation(value = "set user as deleted")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
-                    value = "id of user for soft delete", required = true)
+                    value = "id of user for soft delete", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully deleted"),
@@ -123,6 +139,10 @@ public class UserController {
     }
 
     @ApiOperation(value = "create one user")
+    /*@ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })*/
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully created"),
             @ApiResponse(code = 500, message = "User with this login already exists, please try another option")
@@ -135,7 +155,9 @@ public class UserController {
     @ApiOperation(value = "update one user")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
-                    value = "id of user for update", required = true)
+                    value = "id of user for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User was successfully updated"),
@@ -149,7 +171,9 @@ public class UserController {
     @ApiOperation(value = "update credentials for user")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", dataType = "string", paramType = "path",
-                    value = "id of user for update", required = true)
+                    value = "id of user for update", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Credentials were successfully updated"),
@@ -163,7 +187,9 @@ public class UserController {
     @ApiOperation(value = "find users with name")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", dataType = "string", paramType = "query",
-                    value = "name for search", required = true)
+                    value = "name for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Users were successfully found"),
@@ -179,7 +205,9 @@ public class UserController {
             @ApiImplicitParam(name = "name", dataType = "string", paramType = "query",
                     value = "name for search", required = true),
             @ApiImplicitParam(name = "surname", dataType = "string", paramType = "query",
-                    value = "surname for search", required = true)
+                    value = "surname for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Users were successfully found"),
@@ -188,5 +216,21 @@ public class UserController {
     @GetMapping("/name_and_surname")
     public List<UserRequest> findByNameAndSurname(@RequestParam String name, @RequestParam String surname) {
         return userService.findUserByNameAndSurname(name, surname);
+    }
+
+    @ApiOperation(value = "find user by login")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "login", dataType = "string", paramType = "query",
+                    value = "login for search", required = true),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User was successfully found"),
+            @ApiResponse(code = 500, message = "There is no user with such login")
+    })
+    @GetMapping("/admin/login")
+    public User findByLogin(@RequestParam String login) {
+        return userService.findByLogin(login);
     }
 }

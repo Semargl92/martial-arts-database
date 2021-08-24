@@ -169,6 +169,11 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchEntityException("There is no user with such credentials"));
     }
 
+    public User findByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(() -> new NoSuchEntityException("There is no user with such login"));
+    }
+
     private List<UserRequest> wrapUsersListWithUserRequest (List<User> users) {
         List<UserRequest> result = new ArrayList<>();
         for (User user : users) {
