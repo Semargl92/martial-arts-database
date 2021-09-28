@@ -5,14 +5,14 @@ create table if not exists users
             primary key,
     name varchar(200) not null,
     surname varchar(200) not null,
-    login varchar(200),
+    login varchar(200) not null,
     gender varchar(100) default 'NOT_SELECTED'::character varying not null,
     weight real,
-    is_deleted boolean not null,
+    is_deleted boolean default false not null,
     created timestamp,
     changed timestamp,
     birth_date date,
-    password varchar(200)
+    password varchar(200) not null
 );
 
 alter table users owner to postgres;
